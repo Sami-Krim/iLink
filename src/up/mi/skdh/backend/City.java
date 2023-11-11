@@ -33,7 +33,7 @@ public class City {
     //Ajouter un voisin Ã  la liste des voisins de la ville
     public void addNeighbor(City city){
     	this.neighbors.add(city);
-    	city.getNeighbors().add(this);
+    	//city.getNeighbors().add(this); j'ai du enl¨¨ve cette partie pour pas que l'affichage est en double pour les voisin
     }
     
     //Ajouter une point de chargement Ã  la ville
