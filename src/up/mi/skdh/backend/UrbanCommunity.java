@@ -2,63 +2,29 @@ package up.mi.skdh.backend;
 
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;//Exception sur l'erreur de frappe
+import java.util.Scanner;
 
 import up.mi.skdh.exceptions.AccessibilityConstraintNotVerifiedException;
+import up.mi.skdh.exceptions.ChargingPointNotFoundException;
 import up.mi.skdh.exceptions.CityNotFoundException;
 
-/**
- * Représente une communauté urbaine contenant des villes et leurs voisins.
- * Gère les villes, les routes entre elles et vérifie les contraintes d'accessibilité.
- * 
- * Cette classe facilite l'ajout, la recherche et l'affichage des villes dans la communauté urbaine.
- * 
- * @author Sami KRIM
- * @author Daniel HUANG
- */
-
 public class UrbanCommunity {
-	// **************************************************
-    // Attributs
-    // **************************************************
-	private ArrayList<City> cities; // Liste des villes dans la communauté
+	private ArrayList<City> cities;
 	
-	// **************************************************
-    // Constructeurs
-    // **************************************************
-	
-	/**
-     * Constructeur de la classe UrbanCommunity.
-     * Initialise une liste vide de villes.
-     */
 	public UrbanCommunity() {
 		this.cities = new ArrayList<City>();
 	}
+	public UrbanCommunity(int numberCity) {
+		this.cities=new ArrayList<City>(numberCity);
+	}
 	
-	/**
-     * Retourne la liste des villes dans la communauté urbaine.
-     * 
-     * @return La liste des villes
-     */
+	//Retourne la liste des villes qui composent la communité
 	public ArrayList<City> getCities(){
 		return this.cities;
 	}
 	
-	/**
-     * Ajoute une ville dans la liste des villes.
-     * 
-     * @param city La ville à ajouter
-     */
-	public void addCity(City city){
-		this.cities.add(city);
-	}
-	
-	/**
-     * Recherche une ville par son nom dans la liste des villes.
-     * 
-     * @param cityName Le nom de la ville à rechercher
-     * @return L'objet ville s'il est trouvé
-     * @throws CityNotFoundException Si la ville n'est pas trouvée dans la liste
-     */
+	//Recherche une ville par son nom dans la liste des villes
 	public City findCity(String cityName) throws CityNotFoundException{
 		for(City c : this.cities) {
 			if(c.getName().equals(cityName)) {
@@ -68,90 +34,65 @@ public class UrbanCommunity {
 		throw new CityNotFoundException("La ville " + cityName + " n'existe pas.");
 	}
 	
-	/**
-     * Ajoute une route entre deux villes, les reliant.
-     * 
-     * @param cityAName Le nom de la première ville
-     * @param cityBName Le nom de la deuxième ville
-     * @return L'état de l'ajout de la route
-     */
-	public boolean addRoad(String cityAName, String cityBName) {
+	//Ajoute une route entre deux villes
+	public void addRoad(String cityAName, String cityBName) {
 		try {
-			City cityA = this.findCity(cityAName); //Rechercher la première ville
-			City cityB = this.findCity(cityBName); //Rechercher la deuxième ville
-			cityA.addNeighbor(cityB); //Ajouter la première ville à la liste des voisins de la deuxième ville
-			cityB.addNeighbor(cityA); //Ajouter la deuxième ville à la liste des voisins de la première ville
-			return true;
-		} catch(CityNotFoundException e) { //Si l'une des villes n'a pas été trouvé
+			City cityA = this.findCity(cityAName);
+			City cityB = this.findCity(cityBName);
+			cityA.addNeighbor(cityB);
+			cityB.addNeighbor(cityA);
+		} catch(CityNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
-		return false;
 	}
 	
-	/**
-     * Vérifie si la contrainte d'accessibilité est respectée dans la communauté urbaine.
-     * 
-     * @param removedCity La ville pour laquelle la contrainte est vérifiée
-     * @return true si la contrainte est vérifiée, sinon lance une exception
-     * @throws AccessibilityConstraintNotVerifiedException Si la contrainte n'est pas respectée
-     */
-	public boolean verifyAccessibilityConstraint(City removedCity) throws AccessibilityConstraintNotVerifiedException{
-		for (City city : cities) { //Parcourir toutes les villes de la communauté urbaine
-            if (!city.hasChargingPoint()) { //Vérifier pour chaque ville ne possédant pas une borne de recharge si elle est en contact direct avec une autre ville (voisin) possédant une borne de recharge
-                boolean hasNeighborWithCP = false; //Pour vérifier la contrainte
+	//Retourne vrai si la contrainte d'accessibilité est vérifiée, lève une exception sinon
+	public boolean verifyAccessibilityConstraint() throws AccessibilityConstraintNotVerifiedException{
+		for (City city : cities) {
+            if (!city.hasChargingPoint()) {
+                boolean hasNeighborWithCP = false;
                 for (City neighbor : city.getNeighbors()) {
-                    if (neighbor.hasChargingPoint()) { //S'il existe au moins un voisin en contact direct et possédant une borne de recharge
+                    if (neighbor.hasChargingPoint()) {
                     	hasNeighborWithCP = true;
                         break;
                     }
                 }
-                if (!hasNeighborWithCP) { //Si aucune des villes possède est en contact direct avec une autre ville (voisin) possédant une borne de recharge
-                	removedCity.addChargingPoint(); //Remettre la borne de racharge à la ville
-                    throw new AccessibilityConstraintNotVerifiedException(); //Lever une exception 
+                if (!hasNeighborWithCP) {
+                    throw new AccessibilityConstraintNotVerifiedException();
                 }
             }
         }
         return true;
     }
-	
-	/**
-     * Affiche les villes dans la communauté urbaine ayant un point de recharge.
-     */
+	//Affichage des villes avec une borne de recharge
 	public void displayCitiesWithChargingPoint() {
-		System.out.print("Les villes avec une zone de recharge sont: ");
+		System.out.println("Affichage des villes avec une zone de recharge");
 		for(City city:cities) {
 			if(city.hasChargingPoint()) {
-				System.out.print(city.getName() + " ");
+				System.out.println(city.getName()+" ");
 			}
 		}
-		System.out.println();
+		System.out.println("\n");
 	}
 	
-	/**
-     * Affiche toutes les villes dans la communauté urbaine.
-     */
+	//Affichage des villes dans la communaut��
 	public void displayUrbanCommunity() {
-		System.out.print("Les villes de la communauté sont: ");
+		System.out.println("Affichage des villes dans la communaut��");
 		for(City city:cities) {
-			System.out.print(city.getName() + " ");
+			System.out.println(city.getName()+" ");
 		}
-		System.out.println();
+		System.out.println("\n");
 	}
-	
-	/**
-     * Affiche chaque ville dans la communauté urbaine avec ses voisins.
-     */
+	//Affichage de la ville et de son voisin
     public void displayCitiesAndNeighbors() {
-    	System.out.println("Les villes de la communauté avec leurs voisins: ");
         for (City city : cities) {
-            System.out.print("Ville: " + city.getName() + ", Voisins: ");
+            System.out.println("Ville: " + city.getName() + ", Voisins: ");
             ArrayList<City> neighbors = city.getNeighbors();
             for (City neighbor : neighbors) {
                 System.out.print(neighbor.getName() + " ");
             }
-            System.out.println();
+            System.out.println("");
         }
-        System.out.println();
     }
-}
+}//Fin classe UrbanCommunity
 	

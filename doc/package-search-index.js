@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"up.mi.skdh.backend"},{"l":"up.mi.skdh.exceptions"},{"l":"up.mi.skdh.frontend"}];updateSearchResults();

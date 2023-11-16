@@ -1,200 +1,105 @@
 package up.mi.skdh.frontend;
-
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import up.mi.skdh.exceptions.*;
 import up.mi.skdh.backend.City;
 import up.mi.skdh.backend.UrbanCommunity;
 
-/**
- * Gère les interactions utilisateur via des menus pour manipuler la communauté urbaine.
- * Permet d'ajouter des routes entre les villes, de gérer les bornes de recharge et d'afficher les options.
- * 
- * @author Sami KRIM
- * @author Daniel HUANG
- */
-
 public class MenuControl {
-	// **************************************************
-    // Attributs
-    // **************************************************
-	private Scanner choiceReader; // Scanner pour lire les choix de l'utilisateur
-	private UrbanCommunity community; // Communauté urbaine gérée par cette classe
+	private Scanner choiceReader;
+	private UrbanCommunity community;
 	
-	// **************************************************
-    // Constructeurs
-    // **************************************************
-	
-	/**
-     * Constructeur initialisant le scanner et la communauté urbaine.
-     */
 	public MenuControl() {
 		this.choiceReader=new Scanner(System.in);
 		this.community=new UrbanCommunity();
 	}
-	
-	// **************************************************
-    // Méthodes privées
-    // **************************************************
-	
-	/**
-     * Affiche le premier menu pour ajouter des liaisons entre les villes.
-     */
-	private void displayMenu1() {
+	//Menu qui permet a l'utilisateur de mettre des routes entre les villes
+	public void displayMenu() {
 		int choice;
 		do {
-			System.out.println("<<<<<<<<<<<<<< Menu >>>>>>>>>>>>>>");
+			System.out.println("====Menu====");
 			System.out.println("1: Ajouter une route");
 			System.out.println("2: Fin");
-			choice = choiceReader.nextInt();
+			choice=choiceReader.nextInt();
 			
 			switch(choice) {
 			case 1:
-				this.addRoad(); //Ajouter une route
+				//Ajouter les routes
+				addRoad();
 				break;
 			case 2:
-				this.community.displayCitiesAndNeighbors(); //Afficher les villes et leurs voisins
-				this.displayMenu2(); //Passer au menu de gestion des bornes de recharges
+				//Quitte l'option ajouter des routes pour avoir des nouvelles options
+				displayMenu2();
 				break;
-			default: //Si le choix n'est pas valid
-				System.out.println("Choix invalide. Veuillez choisir une autre fois");
+			default:
+				System.out.println("Choix invalit��. Veuillez choisir �� nouveaux");
 				break;
 			}
-			this.pausePrints(); //Pauser l'affichage
-		} while(choice != 2);
+		}while(choice!=2);
 		
 	}
-	
-	/**
-     * Affiche le deuxième menu pour gérer les bornes de recharge.
-     */
+	//Interface du 2��me menu d'option pour ajouter ou retirer des borne
 	private void displayMenu2() {
 		int choice;
 		do {
-			System.out.println("<<<<<<<<<<<<<< Menu >>>>>>>>>>>>>>");
-			System.out.println("1: Ajouter une borne de recharge pour une ville");
+			System.out.println("====Option====");
+			System.out.println("1: Ajouter une borne de recharge �� une ville");
 			System.out.println("2: Retirer une borne de recharge d'une ville");
 			System.out.println("3: Fin");
-			choice = choiceReader.nextInt();
+			choice=choiceReader.nextInt();
 			
 			switch(choice) {
 			case 1:
-				this.addChargingCity(); //Ajoute une borne de recharge 
+				//Ajoute des borne de recharge 
+				addChargingCities();
 				break;
 			case 2:
-				this.removeChargingCity(); //Retirer une borne de recharge
+				//Retirer les bornes de recharge
+				removeChargingCities();
 				break;
 			case 3:
-				System.out.println("FIN");
-				this.community.displayCitiesWithChargingPoint(); //Afficher les villes possédant une borne de recharge
-				this.choiceReader.close(); //Libérer le scanner
-				System.exit(0); //EXIT
+				System.out.println("Fin des options");
+				System.exit(0);
 				break;
-			default: //Si le choix n'est pas valid
-				System.out.println("Choix invalide. Veuillez choisir une autre fois");
+			default:
+				System.out.println("Choix invalit��. Veuillez choisir �� nouveaux");
 				break;
 			}
-			this.pausePrints(); //Pauser l'affichage
-		} while(choice != 3);
+		}while(choice!=3);
 	}
-	
-	/**
-     * Méthode pour ajouter une route entre deux villes.
-     */
+	//M��thode qui permet d'ajouter des routes entre 2 villes
 	private void addRoad(){
-		System.out.println("Donnez le nom des villes que vous souhaitez relier avec une route.");
+		System.out.println("Nom des villes que vous souhaitez relier avec une route");
 		System.out.println("Nom de la ville A");
-		String cityAName = choiceReader.next(); //Lire le nom de la première ville
+		String cityAName=choiceReader.next();
 		System.out.println("Nom de la ville B");
-		String cityBName = choiceReader.next(); //Lire le nom de la deuxième ville
-		if(community.addRoad(cityAName, cityBName)){ //Ajouter une route entre les deux villes.
-			System.out.println("Route ajoutée avec succés entre " + cityAName + " et " + cityBName + ".");
-		}
+		String cityBName=choiceReader.next();
+		community.addRoad(cityAName, cityBName);
+		System.out.println("Route ajout��e avec succ��s");
+
 	}
-	
-	/**
-     * Méthode pour ajouter une borne de recharge à une ville.
-     */
-	private void addChargingCity() {
-		System.out.println("Indiquez le nom de la ville pour laquelle vous souhaitez ajouter une borne de recharge");
-		String cityName = choiceReader.next(); //Lire le nom de la ville
+	//M��thode pour ajouter une borne de recharge dans une ville avec le choix d'indique la ville
+	private void addChargingCities() {
+		System.out.println("Nom de la ville que vous voulez mettre une borne de recharge");
+		String cityName=choiceReader.next();
 		try {
-			City city = community.findCity(cityName); //Rechercher la ville
-			city.addChargingPoint(); //Ajouter le point de chargement à la ville
-			System.out.println("Borne de recharge ajouter à la ville " + city.getName() + ".");
-		}catch(CityNotFoundException e) { //Si la ville n'a pas été trouvée
+			City city=community.findCity(cityName);
+			city.addChargingPoint();
+			System.out.println("Borne de recharge ajouter �� la ville");
+		}catch(CityNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
 	}
-	
-	/**
-     * Méthode pour retirer une borne de recharge d'une ville.
-     */
-	private void removeChargingCity() {
-		System.out.println("Indiquez le nom de la ville pour laquelle vous souhaitez retirer une borne de recharge");
-		String cityName = choiceReader.next(); //Lire le nom de la ville
+	//M��thode pour retirer une borne de recharge d'une ville 
+	private void removeChargingCities() {
+		System.out.println("Nom de la ville que vous souhaitez retire la borne de recharge");
+		String cityName=choiceReader.next();
 		try {
-			City city = community.findCity(cityName); //Rechercher la ville
-			city.removeChargingPoint(); //Retirer le point de chargement de la ville
-			//Vérifier la contrainte d'accessibilité
-			if (this.community.verifyAccessibilityConstraint(city)) { //Si elle est vérifiée
-	            System.out.println("Borne de recharge retirée de la ville.");
-	        }
-	    } catch (CityNotFoundException | ChargingPointNotFoundException e) { //Si la ville n'a pas été trouvée u la ville ne possède pas de point de chargement
-	        System.out.println(e.getMessage());
-	    } catch (AccessibilityConstraintNotVerifiedException e) { //Si la contrainte d'accessibilité n'est pas vérifiée
-	        System.out.println(e.getMessage());
-	    }
-	}
-	
-	/**
-     * Méthode pour charger la communauté urbaine avec des villes et leurs noms.
-     */
-	private void loadUrbanCommunity() {
-		int numberOfCities;
-        while (true) {
-            try {
-                System.out.println("Merci d'introduire le nombre de villes : ");
-                numberOfCities = this.choiceReader.nextInt(); //Lire le nombre de villes de la communauté urbaine
-                break;
-            } catch (InputMismatchException e) { //Si la valeur introduite n'est pas un nombre entier
-                System.out.println("Erreur : Entrez un <<nombre>> <<entier>> pour le nombre de villes.");
-            } finally {
-            	this.choiceReader.nextLine(); //Consommer l'entrée précédente
-            }
-        }
-
-        for (int i = 0; i < numberOfCities; i++) {
-            System.out.print("Entrez le nom de la ville " + (i + 1) + " : ");
-            String cityName = this.choiceReader.nextLine(); //Lire le nom de la ville
-            City city = new City(cityName); //Créer une nouvelle ville
-            this.community.addCity(city); //Ajouter la ville à la liste des villes de la communauté urbaine 
-        }
-
-        System.out.println("Communité chargée avec succès!");
-        this.community.displayUrbanCommunity();
-        this.pausePrints();
-    }
-	
-	/**
-     * Méthode pour afficher une pause dans l'exécution du programme.
-     */
-	private void pausePrints() {
-		System.out.println("Appuyez sur Entrée pour continuer...");
-        this.choiceReader.nextLine();
-	}
-	
-	// **************************************************
-    // Méthodes publiques
-    // **************************************************
-	
-	/**
-     * Lance l'application en chargeant la communauté urbaine et affichant le premier menu.
-     */
-	public void startApp() {
-		System.out.println("Bienvenue dans le Gestionnaire de bornes de recharge !");
-		this.loadUrbanCommunity();
-		this.displayMenu1();
+			City city=community.findCity(cityName);
+			city.removeChargingPoint();
+			System.out.println("Borne de recharge retire de la ville");
+		}catch(CityNotFoundException |ChargingPointNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }
