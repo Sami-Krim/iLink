@@ -19,8 +19,14 @@ public class MenuControl {
 	// **************************************************
     // Attributs
     // **************************************************
-	private Scanner choiceReader; // Scanner pour lire les choix de l'utilisateur
-	private UrbanCommunity community; // Communauté urbaine gérée par cette classe
+	/**
+	 * Scanner pour lire les choix de l'utilisateur à visibilité privée 
+	 */
+	private Scanner choiceReader;
+	/**
+	 * Communauté urbaine gérée par cette classe à visibilité privée 
+	 */
+	private UrbanCommunity community;
 	
 	// **************************************************
     // Constructeurs
@@ -51,7 +57,9 @@ public class MenuControl {
 			
 			switch(choice) {
 			case 1:
+				this.community.displayUrbanCommunity();
 				this.addRoad(); //Ajouter une route
+				this.community.displayCitiesAndNeighbors();
 				break;
 			case 2:
 				this.community.displayCitiesAndNeighbors(); //Afficher les villes et leurs voisins
@@ -80,9 +88,11 @@ public class MenuControl {
 			
 			switch(choice) {
 			case 1:
+				this.community.displayCitiesWithNoChargingPoint();
 				this.addChargingCity(); //Ajoute une borne de recharge 
 				break;
 			case 2:
+				this.community.displayCitiesWithChargingPoint();
 				this.removeChargingCity(); //Retirer une borne de recharge
 				break;
 			case 3:
@@ -104,9 +114,9 @@ public class MenuControl {
      */
 	private void addRoad(){
 		System.out.println("Donnez le nom des villes que vous souhaitez relier avec une route.");
-		System.out.println("Nom de la ville A");
+		System.out.println("Nom de la première ville : ");
 		String cityAName = choiceReader.next(); //Lire le nom de la première ville
-		System.out.println("Nom de la ville B");
+		System.out.println("Nom de la deuxième ville : ");
 		String cityBName = choiceReader.next(); //Lire le nom de la deuxième ville
 		if(community.addRoad(cityAName, cityBName)){ //Ajouter une route entre les deux villes.
 			System.out.println("Route ajoutée avec succés entre " + cityAName + " et " + cityBName + ".");
@@ -123,7 +133,7 @@ public class MenuControl {
 			City city = community.findCity(cityName); //Rechercher la ville
 			city.addChargingPoint(); //Ajouter le point de chargement à la ville
 			System.out.println("Borne de recharge ajouter à la ville " + city.getName() + ".");
-		}catch(CityNotFoundException e) { //Si la ville n'a pas été trouvée
+		}catch(CityNotFoundException | ChargingPointFoundException e) { //Si la ville n'a pas été trouvée
 			System.out.println(e.getMessage());
 		}
 	}
@@ -157,9 +167,13 @@ public class MenuControl {
             try {
                 System.out.println("Merci d'introduire le nombre de villes : ");
                 numberOfCities = this.choiceReader.nextInt(); //Lire le nombre de villes de la communauté urbaine
-                break;
+                if (numberOfCities >= 0) {
+                	break;
+                } else {
+                	throw new InputMismatchException();
+                }
             } catch (InputMismatchException e) { //Si la valeur introduite n'est pas un nombre entier
-                System.out.println("Erreur : Entrez un <<nombre>> <<entier>> pour le nombre de villes.");
+                System.out.println("Erreur : Entrez un <<nombre>> <<entier>> <<positif>> pour le nombre de villes.");
             } finally {
             	this.choiceReader.nextLine(); //Consommer l'entrée précédente
             }

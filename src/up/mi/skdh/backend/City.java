@@ -2,6 +2,7 @@ package up.mi.skdh.backend;
 
 import java.util.ArrayList;
 
+import up.mi.skdh.exceptions.ChargingPointFoundException;
 import up.mi.skdh.exceptions.ChargingPointNotFoundException;
 
 /**
@@ -16,9 +17,18 @@ public class City {
 	// **************************************************
     // Attributs
     // **************************************************
-	private String name; //Nom de la ville
-    private boolean chargingPoint; //Montre si la ville possède une borne de recharge ou pas
-    private ArrayList<City> neighbors; //Liste des voisins de la ville
+	/**
+	 * Chaine de carctères représentant le nom de la ville à visibilité privée
+	 */
+	private String name; //Chaine de carctères représentant le nom de la ville à visibilité privée
+	/**
+	 * Booléen montrant si la ville possède une borne de recharge ou pas à visibilité privée
+	 */
+    private boolean chargingPoint; //Booléen montrant si la ville possède une borne de recharge ou pas à visibilité privée
+    /**
+	 * Liste des voisins de la ville à visibilité privée
+	 */
+    private ArrayList<City> neighbors; //Liste des voisins de la ville à visibilité privée
     
     // **************************************************
     // Constructeurs
@@ -78,9 +88,15 @@ public class City {
     
     /**
      * Ajoute une borne de recharge à la ville.
+     * 
+     * @throws ChargingPointFoundException Si la ville possède de borne de recharge à supprimer
      */
-    public void addChargingPoint() {
-    	this.chargingPoint = true;
+    public void addChargingPoint() throws ChargingPointFoundException{
+    	if(this.chargingPoint) {
+    		throw new ChargingPointFoundException();
+    	} else {
+    		this.chargingPoint = true;
+    	}
     }
     
     /**

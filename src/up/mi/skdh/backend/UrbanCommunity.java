@@ -4,6 +4,7 @@ package up.mi.skdh.backend;
 import java.util.ArrayList;
 
 import up.mi.skdh.exceptions.AccessibilityConstraintNotVerifiedException;
+import up.mi.skdh.exceptions.ChargingPointFoundException;
 import up.mi.skdh.exceptions.CityNotFoundException;
 
 /**
@@ -20,7 +21,10 @@ public class UrbanCommunity {
 	// **************************************************
     // Attributs
     // **************************************************
-	private ArrayList<City> cities; // Liste des villes dans la communauté
+	/**
+	 * Liste des villes de la communauté à visibilité privée 
+	 */
+	private ArrayList<City> cities; //Liste des villes de la communauté à visibilité privée 
 	
 	// **************************************************
     // Constructeurs
@@ -106,7 +110,12 @@ public class UrbanCommunity {
                     }
                 }
                 if (!hasNeighborWithCP) { //Si aucune des villes possède est en contact direct avec une autre ville (voisin) possédant une borne de recharge
-                	removedCity.addChargingPoint(); //Remettre la borne de racharge à la ville
+                	try {
+						removedCity.addChargingPoint();
+					} catch (ChargingPointFoundException e) {
+						// TODO Auto-generated catch block
+						System.out.println(e.getMessage());
+					} //Remettre la borne de racharge à la ville
                     throw new AccessibilityConstraintNotVerifiedException(); //Lever une exception 
                 }
             }
@@ -115,10 +124,24 @@ public class UrbanCommunity {
     }
 	
 	/**
+     * Vérifie si au moins une des villes de la communauté possède une borne de recharge.
+     * 
+     * @return true si la communauté possède au moins une ville avec une zone de recharge.
+     */
+	private boolean hasChargingPoints() {
+		for(City city:cities) {
+			if(city.hasChargingPoint()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
      * Affiche les villes dans la communauté urbaine ayant un point de recharge.
      */
 	public void displayCitiesWithChargingPoint() {
-		System.out.print("Les villes avec une zone de recharge sont: ");
+		System.out.print("Les villes avec une zone de recharge sont : ");
 		for(City city:cities) {
 			if(city.hasChargingPoint()) {
 				System.out.print(city.getName() + " ");
@@ -128,10 +151,27 @@ public class UrbanCommunity {
 	}
 	
 	/**
+     * Affiche les villes dans la communauté urbaine n'ayant pas un point de recharge.
+     */
+	public void displayCitiesWithNoChargingPoint() {
+		if(this.hasChargingPoints()) {
+			System.out.print("Les villes possèdent tous une borne de recharge.");
+		} else {
+			System.out.print("Les villes n'ayant pas une zone de recharge sont : ");
+			for(City city:cities) {
+				if(!city.hasChargingPoint()) {
+					System.out.print(city.getName() + " ");
+				}
+			}
+		}
+		System.out.println();
+	}
+	
+	/**
      * Affiche toutes les villes dans la communauté urbaine.
      */
 	public void displayUrbanCommunity() {
-		System.out.print("Les villes de la communauté sont: ");
+		System.out.print("Les villes de la communauté sont : ");
 		for(City city:cities) {
 			System.out.print(city.getName() + " ");
 		}
