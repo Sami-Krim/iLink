@@ -113,7 +113,6 @@ public class UrbanCommunity {
                 	try {
 						removedCity.addChargingPoint();
 					} catch (ChargingPointFoundException e) {
-						// TODO Auto-generated catch block
 						System.out.println(e.getMessage());
 					} //Remettre la borne de racharge à la ville
                     throw new AccessibilityConstraintNotVerifiedException(); //Lever une exception 

@@ -1,6 +1,8 @@
 package up.mi.skdh.frontend;
 
-import java.util.InputMismatchException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 import up.mi.skdh.exceptions.*;
@@ -162,35 +164,58 @@ public class MenuControl {
      * M√©thode pour charger la communaut√© urbaine avec des villes et leurs noms.
      */
 	private void loadUrbanCommunity() {
-		int numberOfCities;
-        while (true) {
-            try {
-                System.out.println("Merci d'introduire le nombre de villes : ");
-                numberOfCities = this.choiceReader.nextInt(); //Lire le nombre de villes de la communaut√© urbaine
-                if (numberOfCities >= 0) {
-                	break;
-                } else {
-                	throw new InputMismatchException();
-                }
-            } catch (InputMismatchException e) { //Si la valeur introduite n'est pas un nombre entier
-                System.out.println("Erreur : Entrez un <<nombre>> <<entier>> <<positif>> pour le nombre de villes.");
-            } finally {
-            	this.choiceReader.nextLine(); //Consommer l'entr√©e pr√©c√©dente
-            }
+        /*System.out.println("Entre le chemin du fichier de la communaut®¶ urbaine: ");
+        String filePath=this.choiceReader.next();
+        */
+		
+		String filePath="C:\\Users\\SHAO\\Desktop\\text.txt";
+        try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {
+        	String line;
+        	while((line=fileReader.readLine())!=null) {
+        		processFileLine(line);
+        	}
+            System.out.println("Communit®¶ charg®¶e avec succ®¶s!");
+            this.community.displayUrbanCommunity();
+            this.pausePrints();
+        	try {
+        		for(City city:this.community.getCities()) {
+        			this.community.verifyAccessibilityConstraint(city);
+        		}
+        		System.out.println("Les contraintes d'accessibilit®¶ sont respect®¶es.");
+        	}catch(AccessibilityConstraintNotVerifiedException e) {
+        		System.out.println("Les contraintes d'accessibilit®¶ ne sont pas respect®¶es:"+ e.getMessage());
+        	}
+		}catch(IOException e) {
+            System.out.println("Une erreur s'est produit lors de la lecture du fichier: "+e.getMessage());
         }
-
-        for (int i = 0; i < numberOfCities; i++) {
-            System.out.print("Entrez le nom de la ville " + (i + 1) + " : ");
-            String cityName = this.choiceReader.nextLine(); //Lire le nom de la ville
-            City city = new City(cityName); //Cr√©er une nouvelle ville
-            this.community.addCity(city); //Ajouter la ville √† la liste des villes de la communaut√© urbaine 
-        }
-
-        System.out.println("Communit√© charg√©e avec succ√®s!");
-        this.community.displayUrbanCommunity();
-        this.pausePrints();
     }
-	
+	/**
+	 * M®¶thode pour traiter chaque ligne du fichier
+	 */
+	private void processFileLine(String line) {
+		line=line.toLowerCase();//Convertit la ligne en minuscule pour pas avoir des probl®®me de casse
+		if(line.startsWith("ville(")) {
+			//Traitement pour ajouter une ville 
+			String cityName=line.substring(6,line.length()-2);//Extraire le nom de la ville
+			City city=new City(cityName);
+			city.setChargingPoint(false);
+			this.community.addCity(city);
+		}else if(line.startsWith("route(")) {
+			String[] cities=line.substring(6,line.length()-2).split(",");//Extraire les noms des villes
+			if(cities.length==2) {
+				this.community.addRoad(cities[0],cities[1]);
+			}
+		}else if(line.startsWith("recharge(")) {
+			String cityName=line.substring(9,line.length()-2);
+			try {
+				City city=this.community.findCity(cityName);
+				city.addChargingPoint();
+			}catch(CityNotFoundException |ChargingPointFoundException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
+	}
 	/**
      * M√©thode pour afficher une pause dans l'ex√©cution du programme.
      */
