@@ -57,6 +57,21 @@ public class UrbanCommunity {
 	}
 	
 	/**
+     * Retourne le nombre de villes avec une zone de recharge dans la communauté urbaine.
+     * 
+     * @return Le nombre de villes avec une zone de recharge
+     */
+	public int getNumberChargingPoints() {
+	    int totalChargingPoints = 0;
+	    for (City city : this.cities) {
+	        if (city.hasChargingPoint()) {
+	            totalChargingPoints++;
+	        }
+	    }
+	    return totalChargingPoints;
+	}
+	
+	/**
      * Recherche une ville par son nom dans la liste des villes.
      * 
      * @param cityName Le nom de la ville à rechercher
