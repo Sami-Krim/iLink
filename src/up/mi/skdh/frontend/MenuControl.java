@@ -1,7 +1,8 @@
 package up.mi.skdh.frontend;
 
-import java.util.InputMismatchException;
-import java.util.Random;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 import up.mi.skdh.exceptions.*;
@@ -202,36 +203,56 @@ public class MenuControl {
 	/**
      * Méthode pour charger la communauté urbaine avec des villes et leurs noms.
      */
-	private void loadUrbanCommunity() {
-		int numberOfCities;
-        while (true) {
-            try {
-                System.out.println("Merci d'introduire le nombre de villes : ");
-                numberOfCities = this.choiceReader.nextInt(); //Lire le nombre de villes de la communauté urbaine
-                if (numberOfCities >= 0) {
-                	break;
-                } else {
-                	throw new InputMismatchException();
-                }
-            } catch (InputMismatchException e) { //Si la valeur introduite n'est pas un nombre entier
-                System.out.println("Erreur : Entrez un <<nombre>> <<entier>> <<positif>> pour le nombre de villes.");
-            } finally {
-            	this.choiceReader.nextLine(); //Consommer l'entrée précédente
-            }
+	private void loadUrbanCommunity(String filePath) {
+        try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {
+        	String line;
+        	while((line = fileReader.readLine())!=null) {
+        		this.processFileLine(line);
+        	}
+            System.out.println("Communité chargée avec succés!");
+            this.community.displayUrbanCommunity();
+            this.pausePrints();
+        	try {
+        		this.community.verifyAccessibilityConstraint();
+        		System.out.println("La contrainte d'accessibilité est respectée.");
+        	}catch(AccessibilityConstraintNotVerifiedException e) {
+        		System.out.println("La contrainte d'accessibilité n'est pas respectée : "+ e.getMessage());
+        		System.out.println("La solution naive sera utilisée");
+        		this.community.naiveSolution();
+        		this.community.displayCitiesAndNeighbors();
+        		this.community.displayCitiesWithChargingPoint();
+        	}
+        	this.displayMenu1();
+		}catch(IOException e) {
+            System.out.println("Une erreur s'est produit lors de la lecture du fichier : " + e.getMessage());
         }
-
-        for (int i = 0; i < numberOfCities; i++) {
-            System.out.print("Entrez le nom de la ville " + (i + 1) + " : ");
-            String cityName = this.choiceReader.nextLine(); //Lire le nom de la ville
-            City city = new City(cityName); //Créer une nouvelle ville
-            this.community.addCity(city); //Ajouter la ville à la liste des villes de la communauté urbaine 
-        }
-        this.displayManualMenu1();
-
-        System.out.println("Communité chargée avec succès!");
-        this.community.displayUrbanCommunity();
-        this.pausePrints();
     }
+	/**
+	 * Méthode pour traiter chaque ligne du fichier
+	 */
+	private void processFileLine(String line) {
+		String lowerCaseLine = line.toLowerCase();//Convertit la ligne en minuscule pour pas avoir des problème de casse
+		if(lowerCaseLine.startsWith("ville(")) {
+			//Traitement pour ajouter une ville 
+			String cityName = line.substring(6, line.length() - 1).replace(" ", "");//Extraire le nom de la ville
+			City city = new City(cityName);
+			city.setChargingPoint(false);
+			this.community.addCity(city);
+		}else if(lowerCaseLine.startsWith("route(")) {
+			String[] cities = line.substring(6, line.length() - 1).replace(" ", "").split(",");//Extraire les noms des villes
+			if(cities.length == 2) {
+				this.community.addRoad(cities[0], cities[1]);
+			}
+		}else if(lowerCaseLine.startsWith("recharge(")) {
+			String cityName = line.substring(9, line.length() - 2);
+			try {
+				City city = this.community.findCity(cityName);
+				city.addChargingPoint();
+			}catch(CityNotFoundException | ChargingPointFoundException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
 	
 	
 	private void automaticSolution() {
@@ -340,9 +361,8 @@ public class MenuControl {
 	/**
      * Lance l'application en chargeant la communauté urbaine et affichant le premier menu.
      */
-	public void startApp() {
+	public void startApp(String filePath) {
 		System.out.println("Bienvenue dans le Gestionnaire de bornes de recharge !");
-		this.loadUrbanCommunity();
-		this.displayMainMenu();;
+		this.loadUrbanCommunity(filePath);
 	}
 }
