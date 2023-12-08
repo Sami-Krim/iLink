@@ -18,7 +18,9 @@
 	     */
 		public static void main(String[] args) {
 			MenuControl app = new MenuControl();
-			app.startApp();
+			if(args.length > 0) {
+				app.startApp(args[0]);
+			}
 		}
 	
 	}

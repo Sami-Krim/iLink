@@ -1,7 +1,7 @@
 package up.mi.skdh.backend;
 
 
-import java.util.ArrayList;
+import java.util.ArrayList;import java.util.spi.LocaleNameProvider;
 
 import up.mi.skdh.exceptions.AccessibilityConstraintNotVerifiedException;
 import up.mi.skdh.exceptions.ChargingPointFoundException;
@@ -123,6 +123,30 @@ public class UrbanCommunity {
     }
 	
 	/**
+     * Vérifie si la contrainte d'accessibilité est respectée dans la communauté urbaine. Une surcharge de la méthode "public boolean verifyAccessibilityConstraint(City removedCity)".
+     * 
+     * @return true si la contrainte est vérifiée, sinon lance une exception
+     * @throws AccessibilityConstraintNotVerifiedException Si la contrainte n'est pas respectée
+     */
+	public boolean verifyAccessibilityConstraint() throws AccessibilityConstraintNotVerifiedException{
+		for (City city : cities) { //Parcourir toutes les villes de la communauté urbaine
+            if (!city.hasChargingPoint()) { //Vérifier pour chaque ville ne possédant pas une borne de recharge si elle est en contact direct avec une autre ville (voisin) possédant une borne de recharge
+                boolean hasNeighborWithCP = false; //Pour vérifier la contrainte
+                for (City neighbor : city.getNeighbors()) {
+                    if (neighbor.hasChargingPoint()) { //S'il existe au moins un voisin en contact direct et possédant une borne de recharge
+                    	hasNeighborWithCP = true;
+                        break;
+                    }
+                }
+                if (!hasNeighborWithCP) { //Si aucune des villes possède est en contact direct avec une autre ville (voisin) possédant une borne de recharge
+                    throw new AccessibilityConstraintNotVerifiedException(); //Lever une exception 
+                }
+            }
+        }
+        return true;
+    }
+	
+	/**
      * Vérifie si au moins une des villes de la communauté possède une borne de recharge.
      * 
      * @return true si la communauté possède au moins une ville avec une zone de recharge.
@@ -134,6 +158,16 @@ public class UrbanCommunity {
 			}
 		}
 		return false;
+	}
+	
+	public void naiveSolution() {
+		if(this.cities.size() > 0 ) {
+			for(City city : this.cities) {
+				try {
+					city.addChargingPoint();
+				} catch (ChargingPointFoundException e) {}
+			}
+		}
 	}
 	
 	/**
