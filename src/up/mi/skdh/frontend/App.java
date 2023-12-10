@@ -13,6 +13,8 @@
 		/**
 	     * Entrée de l'application.
 	     * Crée une instance de MenuControl et lance l'application en appelant sa méthode startApp().
+	     * Si aucun chemin d'un fichier est précisé lors de l'execution, la communauté sera introduite manuellement
+	     * sinon, par l'intermidiaire d'un fichier texte.
 	     * 
 	     * @param args Les arguments en ligne de commande.
 	     */

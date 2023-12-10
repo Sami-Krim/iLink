@@ -36,7 +36,9 @@ public class MenuControl {
 	 * Communauté urbaine gérée par cette classe à visibilité privée 
 	 */
 	private UrbanCommunity community;
-	
+	/**
+	 * Générateur de nombres aléatoires
+	 */
 	private Random random;
 	
 	// **************************************************
@@ -263,8 +265,10 @@ public class MenuControl {
     }
 	
 	/**
-     * Méthode pour charger la communauté urbaine avec des villes et leurs noms.
-     */
+	 * Méthode pour charger la communauté urbaine avec des villes et leurs noms.
+	 * 
+	 * @param filePath le chemin absolu auf fichier de la communauté
+	 */
 	private void loadUrbanCommunity(String filePath) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {
         	String line;
@@ -292,6 +296,8 @@ public class MenuControl {
 	
 	/**
 	 * Méthode pour traiter chaque ligne du fichier
+	 * 
+	 * @param line La ligne à traiter
 	 */
 	private void processFileLine(String line) {
 		String lowerCaseLine = line.toLowerCase();//Convertit la ligne en minuscule pour pas avoir des problème de casse
@@ -468,7 +474,7 @@ public class MenuControl {
 	/**
 	 * Lance l'application en chargeant la communauté urbaine d'un fichier et affichant le premier menu.
 	 * 
-	 * @param filePath
+	 * @param filePath Le chemin absolu vers le fichier contenant la communauté
 	 */
 	public void startApp(String filePath) {
 		System.out.println("Bienvenue dans le Gestionnaire de bornes de recharge !");
