@@ -423,8 +423,9 @@ public class MenuControl {
 	private String readFilePath() {
 		Scanner filePathReader = new Scanner(System.in);
 		System.out.println("Préciser l'emplacement du fichier : ");
+		String filePath = filePathReader.nextLine().trim();
 		filePathReader.close();
-		return filePathReader.nextLine().trim();
+		return filePath;
 	}
 	
 	/**
