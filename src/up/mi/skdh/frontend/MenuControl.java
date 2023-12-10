@@ -208,6 +208,8 @@ public class MenuControl {
 			}catch(CityNotFoundException | ChargingPointFoundException e) { //Si la ville n'a pas été trouvée
 				System.out.println(e.getMessage());
 			}
+		} else {
+			System.out.println("Toutes les villes possèdent une borne de recharge.");
 		}
 	}
 	
