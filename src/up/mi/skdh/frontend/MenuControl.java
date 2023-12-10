@@ -305,7 +305,9 @@ public class MenuControl {
 			//Traitement pour ajouter une ville 
 			String cityName = line.substring(6, line.length() - 1).replace(" ", "");//Extraire le nom de la ville
 			City city = new City(cityName);
-			city.setChargingPoint(false);
+			try {
+				city.removeChargingPoint();
+			} catch (ChargingPointNotFoundException e) {}
 			this.community.addCity(city);
 		}else if(lowerCaseLine.startsWith("route(")) {
 			String[] cities = line.substring(6, line.length() - 1).replace(" ", "").split(",");//Extraire les noms des villes

@@ -111,7 +111,4 @@ public class City {
     		this.chargingPoint = false;
     	}
     }
-    public void setChargingPoint(boolean x) {
-    	this.chargingPoint=x;
-    }
 }
