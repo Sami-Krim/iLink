@@ -57,6 +57,21 @@ public class UrbanCommunity {
 	}
 	
 	/**
+     * Retourne le nombre de villes avec une zone de recharge dans la communauté urbaine.
+     * 
+     * @return Le nombre de villes avec une zone de recharge
+     */
+	public int getNumberChargingPoints() {
+	    int totalChargingPoints = 0;
+	    for (City city : this.cities) {
+	        if (city.hasChargingPoint()) {
+	            totalChargingPoints++;
+	        }
+	    }
+	    return totalChargingPoints;
+	}
+	
+	/**
      * Recherche une ville par son nom dans la liste des villes.
      * 
      * @param cityName Le nom de la ville à rechercher
@@ -113,7 +128,6 @@ public class UrbanCommunity {
                 	try {
 						removedCity.addChargingPoint();
 					} catch (ChargingPointFoundException e) {
-						// TODO Auto-generated catch block
 						System.out.println(e.getMessage());
 					} //Remettre la borne de racharge à la ville
                     throw new AccessibilityConstraintNotVerifiedException(); //Lever une exception 
@@ -124,17 +138,40 @@ public class UrbanCommunity {
     }
 	
 	/**
-     * Vérifie si au moins une des villes de la communauté possède une borne de recharge.
+     * Vérifie si la contrainte d'accessibilité est respectée dans la communauté urbaine. 
      * 
-     * @return true si la communauté possède au moins une ville avec une zone de recharge.
+     * @return true si la contrainte est vérifiée, sinon lance une exception
+     * @throws AccessibilityConstraintNotVerifiedException Si la contrainte n'est pas respectée
      */
-	private boolean hasChargingPoints() {
-		for(City city:cities) {
-			if(city.hasChargingPoint()) {
-				return true;
+	public boolean verifyAccessibilityConstraint() throws AccessibilityConstraintNotVerifiedException{
+		for (City city : cities) { //Parcourir toutes les villes de la communauté urbaine
+            if (!city.hasChargingPoint()) { //Vérifier pour chaque ville ne possédant pas une borne de recharge si elle est en contact direct avec une autre ville (voisin) possédant une borne de recharge
+                boolean hasNeighborWithCP = false; //Pour vérifier la contrainte
+                for (City neighbor : city.getNeighbors()) {
+                    if (neighbor.hasChargingPoint()) { //S'il existe au moins un voisin en contact direct et possédant une borne de recharge
+                    	hasNeighborWithCP = true;
+                        break;
+                    }
+                }
+                if (!hasNeighborWithCP) { //Si aucune des villes possède est en contact direct avec une autre ville (voisin) possédant une borne de recharge
+                    throw new AccessibilityConstraintNotVerifiedException(); //Lever une exception 
+                }
+            }
+        }
+        return true;
+    }
+	
+	/**
+	 * Ajoute une borne de racharge à toutes les villes (solution naive).
+	 */
+	public void naiveSolution() {
+		if(this.cities.size() > 0 ) {
+			for(City city : this.cities) {
+				try {
+					city.addChargingPoint();
+				} catch (ChargingPointFoundException e) {}
 			}
 		}
-		return false;
 	}
 	
 	/**
@@ -154,14 +191,10 @@ public class UrbanCommunity {
      * Affiche les villes dans la communauté urbaine n'ayant pas un point de recharge.
      */
 	public void displayCitiesWithNoChargingPoint() {
-		if(this.hasChargingPoints()) {
-			System.out.print("Les villes possèdent tous une borne de recharge.");
-		} else {
-			System.out.print("Les villes n'ayant pas une zone de recharge sont : ");
-			for(City city:cities) {
-				if(!city.hasChargingPoint()) {
-					System.out.print(city.getName() + " ");
-				}
+		System.out.print("Les villes n'ayant pas une zone de recharge sont : ");
+		for(City city:cities) {
+			if(!city.hasChargingPoint()) {
+				System.out.print(city.getName() + " ");
 			}
 		}
 		System.out.println();
