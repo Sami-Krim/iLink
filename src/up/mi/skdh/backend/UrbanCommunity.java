@@ -1,7 +1,7 @@
 package up.mi.skdh.backend;
 
 
-import java.util.ArrayList;import java.util.spi.LocaleNameProvider;
+import java.util.ArrayList;
 
 import up.mi.skdh.exceptions.AccessibilityConstraintNotVerifiedException;
 import up.mi.skdh.exceptions.ChargingPointFoundException;
@@ -138,7 +138,7 @@ public class UrbanCommunity {
     }
 	
 	/**
-     * Vérifie si la contrainte d'accessibilité est respectée dans la communauté urbaine. Une surcharge de la méthode "public boolean verifyAccessibilityConstraint(City removedCity)".
+     * Vérifie si la contrainte d'accessibilité est respectée dans la communauté urbaine. 
      * 
      * @return true si la contrainte est vérifiée, sinon lance une exception
      * @throws AccessibilityConstraintNotVerifiedException Si la contrainte n'est pas respectée
@@ -162,19 +162,8 @@ public class UrbanCommunity {
     }
 	
 	/**
-     * Vérifie si au moins une des villes de la communauté possède une borne de recharge.
-     * 
-     * @return true si la communauté possède au moins une ville avec une zone de recharge.
-     */
-	private boolean hasChargingPoints() {
-		for(City city:cities) {
-			if(city.hasChargingPoint()) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
+	 * Ajoute une borne de racharge à toutes les villes (solution naive).
+	 */
 	public void naiveSolution() {
 		if(this.cities.size() > 0 ) {
 			for(City city : this.cities) {
@@ -202,14 +191,10 @@ public class UrbanCommunity {
      * Affiche les villes dans la communauté urbaine n'ayant pas un point de recharge.
      */
 	public void displayCitiesWithNoChargingPoint() {
-		if(this.hasChargingPoints()) {
-			System.out.print("Les villes possèdent tous une borne de recharge.");
-		} else {
-			System.out.print("Les villes n'ayant pas une zone de recharge sont : ");
-			for(City city:cities) {
-				if(!city.hasChargingPoint()) {
-					System.out.print(city.getName() + " ");
-				}
+		System.out.print("Les villes n'ayant pas une zone de recharge sont : ");
+		for(City city:cities) {
+			if(!city.hasChargingPoint()) {
+				System.out.print(city.getName() + " ");
 			}
 		}
 		System.out.println();

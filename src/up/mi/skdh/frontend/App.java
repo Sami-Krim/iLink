@@ -20,6 +20,8 @@
 			MenuControl app = new MenuControl();
 			if(args.length > 0) {
 				app.startApp(args[0]);
+			} else {
+				app.startApp();
 			}
 		}
 	

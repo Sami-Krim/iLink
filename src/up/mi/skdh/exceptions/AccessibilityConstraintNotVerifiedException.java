@@ -9,6 +9,6 @@ public class AccessibilityConstraintNotVerifiedException extends Exception {
      * Construit une exception "AccessibilityConstraintNotVerifiedException" avec un message d'erreur par défaut.
      */
 	public AccessibilityConstraintNotVerifiedException() {
-		super("Cas impossible après suppression car la contrainte d'accessibilité n'est pas respectée (il existe une divile qui n'a pas d'accès direct à une bore de chargement).");
+		super("Cas impossible car la contrainte d'accessibilité n'est pas respectée (il existe une divile qui n'a pas d'accès direct à une bore de chargement).");
 	}
 }

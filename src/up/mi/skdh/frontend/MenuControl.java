@@ -1,9 +1,16 @@
 package up.mi.skdh.frontend;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 
 import up.mi.skdh.exceptions.*;
 import up.mi.skdh.backend.City;
@@ -50,7 +57,7 @@ public class MenuControl {
     // **************************************************
 	
 	/**
-     * Affiche le premier menu pour ajouter des liaisons entre les villes.
+     * Affiche le menu principal pour choisir le type de résolution, la sauvegarde dans un fichier et le fin du programme.
      */
 	private void displayMainMenu() {
 		int choice;
@@ -63,83 +70,24 @@ public class MenuControl {
 			choice = choiceReader.nextInt();
 			this.community.displayCitiesAndNeighbors();
 			this.community.displayCitiesWithChargingPoint();
+			this.pausePrints();
 			
 			switch(choice) {
 			case 1:
 				this.displayManualMenu2();
+				this.pausePrints(); //Pauser l'affichage
 				break;
 			case 2:
 				this.automaticSolution();
+				this.pausePrints(); //Pauser l'affichage
 				break;
 			case 3:
-				//this.saveCommunity();
+				this.saveCommunity();
 				break;
 			case 4:
-				break;
-			default: //Si le choix n'est pas valid
-				System.out.println("Choix invalide. Veuillez choisir une autre fois");
-				break;
-			}
-			this.pausePrints(); //Pauser l'affichage
-		} while(choice != 4);
-		
-	}
-	
-	/**
-     * Affiche le premier menu pour ajouter des liaisons entre les villes.
-     */
-	private void displayManualMenu1() {
-		int choice;
-		do {
-			System.out.println("<<<<<<<<<<<<<< Menu >>>>>>>>>>>>>>");
-			System.out.println("1: Ajouter une route");
-			System.out.println("2: Fin");
-			choice = choiceReader.nextInt();
-			
-			switch(choice) {
-			case 1:
-				this.community.displayUrbanCommunity();
-				this.addRoad(); //Ajouter une route
+				System.out.println("FIN!");
 				this.community.displayCitiesAndNeighbors();
-				break;
-			case 2:
-				this.community.displayCitiesAndNeighbors(); //Afficher les villes et leurs voisins
-				//this.displayManualMenu2(); //Passer au menu de gestion des bornes de recharges
-				this.displayMainMenu();
-				break;
-			default: //Si le choix n'est pas valid
-				System.out.println("Choix invalide. Veuillez choisir une autre fois");
-				break;
-			}
-			this.pausePrints(); //Pauser l'affichage
-		} while(choice != 2);
-		
-	}
-	
-	/**
-     * Affiche le deuxième menu pour gérer les bornes de recharge.
-     */
-	private void displayManualMenu2() {
-		int choice;
-		do {
-			System.out.println("<<<<<<<<<<<<<< Menu >>>>>>>>>>>>>>");
-			System.out.println("1: Ajouter une borne de recharge pour une ville");
-			System.out.println("2: Retirer une borne de recharge d'une ville");
-			System.out.println("3: Fin");
-			choice = choiceReader.nextInt();
-			
-			switch(choice) {
-			case 1:
-				this.community.displayCitiesWithNoChargingPoint();
-				this.addChargingCity(); //Ajoute une borne de recharge 
-				break;
-			case 2:
 				this.community.displayCitiesWithChargingPoint();
-				this.removeChargingCity(); //Retirer une borne de recharge
-				break;
-			case 3:
-				System.out.println("FIN");
-				this.community.displayCitiesWithChargingPoint(); //Afficher les villes possédant une borne de recharge
 				this.choiceReader.close(); //Libérer le scanner
 				System.exit(0); //EXIT
 				break;
@@ -147,7 +95,86 @@ public class MenuControl {
 				System.out.println("Choix invalide. Veuillez choisir une autre fois");
 				break;
 			}
-			this.pausePrints(); //Pauser l'affichage
+		} while(choice != 4);
+		
+	}
+	
+	/**
+     * Affiche le premier menu pour la résolution manuelle afin d'ajouter des liaisons entre les villes.
+     */
+	private void displayManualMenu1() {
+		int choice = 0;
+		do {
+			System.out.println("<<<<<<<<<<<<<< Menu >>>>>>>>>>>>>>");
+			System.out.println("1: Ajouter une route");
+			System.out.println("2: Fin");
+			try {
+				choice = choiceReader.nextInt();
+				
+				switch(choice) {
+				case 1:
+					this.community.displayUrbanCommunity();
+					this.addRoad(); //Ajouter une route
+					this.pausePrints();
+					this.community.displayCitiesAndNeighbors();
+					break;
+				case 2:
+					this.community.displayCitiesAndNeighbors(); //Afficher les villes et leurs voisins
+					this.pausePrints();
+					//this.displayManualMenu2(); //Passer au menu de gestion des bornes de recharges
+					this.displayMainMenu();
+					break;
+				default: //Si le choix n'est pas valid
+					System.out.println("Choix invalide. Veuillez choisir une autre fois");
+					break;
+				}
+				this.pausePrints(); //Pauser l'affichage
+			} catch (InputMismatchException e) {
+				System.out.println("Merci d'introduire un <<nombre>> correspondant à l'un des choix précédent");
+				choiceReader.next();
+			}
+		} while(choice != 2);
+		
+	}
+	
+	/**
+     * Affiche le deuxième menu la résolution manuelle afin de gérer les bornes de recharge.
+     */
+	private void displayManualMenu2() {
+		int choice = 0;
+		do {
+			System.out.println("<<<<<<<<<<<<<< Menu >>>>>>>>>>>>>>");
+			System.out.println("1: Ajouter une borne de recharge pour une ville");
+			System.out.println("2: Retirer une borne de recharge d'une ville");
+			System.out.println("3: Fin");
+			try {
+				choice = choiceReader.nextInt();
+				switch(choice) {
+				case 1:
+					this.community.displayCitiesWithNoChargingPoint();
+					this.addChargingCity(); //Ajoute une borne de recharge
+					this.pausePrints();
+					break;
+				case 2:
+					this.community.displayCitiesWithChargingPoint();
+					this.removeChargingCity(); //Retirer une borne de recharge
+					this.pausePrints();
+					break;
+				case 3:
+					this.community.displayCitiesAndNeighbors();
+					this.community.displayCitiesWithChargingPoint(); //Afficher les villes possédant une borne de recharge
+					this.pausePrints();
+					this.displayMainMenu();
+					break;
+				default: //Si le choix n'est pas valid
+					System.out.println("Choix invalide. Veuillez choisir une autre fois");
+					break;
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Merci d'introduire un nombre correspondant à l'un des choix précédent");
+				choiceReader.next();
+			}
+			
 		} while(choice != 3);
 	}
 	
@@ -169,14 +196,16 @@ public class MenuControl {
      * Méthode pour ajouter une borne de recharge à une ville.
      */
 	private void addChargingCity() {
-		System.out.println("Indiquez le nom de la ville pour laquelle vous souhaitez ajouter une borne de recharge");
-		String cityName = choiceReader.next(); //Lire le nom de la ville
-		try {
-			City city = community.findCity(cityName); //Rechercher la ville
-			city.addChargingPoint(); //Ajouter le point de chargement à la ville
-			System.out.println("Borne de recharge ajouter à la ville " + city.getName() + ".");
-		}catch(CityNotFoundException | ChargingPointFoundException e) { //Si la ville n'a pas été trouvée
-			System.out.println(e.getMessage());
+		if(this.community.getNumberChargingPoints() != this.community.getCities().size()) {
+			System.out.println("Indiquez le nom de la ville pour laquelle vous souhaitez ajouter une borne de recharge");
+			String cityName = choiceReader.next(); //Lire le nom de la ville
+			try {
+				City city = community.findCity(cityName); //Rechercher la ville
+				city.addChargingPoint(); //Ajouter le point de chargement à la ville
+				System.out.println("Borne de recharge ajouter à la ville " + city.getName() + ".");
+			}catch(CityNotFoundException | ChargingPointFoundException e) { //Si la ville n'a pas été trouvée
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 	
@@ -203,6 +232,39 @@ public class MenuControl {
 	/**
      * Méthode pour charger la communauté urbaine avec des villes et leurs noms.
      */
+	private void loadUrbanCommunity() {
+		int numberOfCities;
+        while (true) {
+            try {
+                System.out.println("Merci d'introduire le nombre de villes : ");
+                numberOfCities = this.choiceReader.nextInt(); //Lire le nombre de villes de la communauté urbaine
+                if (numberOfCities >= 0) {
+                	break;
+                } else {
+                	throw new InputMismatchException();
+                }
+            } catch (InputMismatchException e) { //Si la valeur introduite n'est pas un nombre entier
+                System.out.println("Erreur : Entrez un <<nombre>> <<entier>> <<positif>> pour le nombre de villes.");
+            } finally {
+            	this.choiceReader.nextLine(); //Consommer l'entrée précédente
+            }
+        }
+
+        for (int i = 0; i < numberOfCities; i++) {
+            System.out.print("Entrez le nom de la ville " + (i + 1) + " : ");
+            String cityName = this.choiceReader.nextLine(); //Lire le nom de la ville
+            City city = new City(cityName); //Créer une nouvelle ville
+            this.community.addCity(city); //Ajouter la ville à la liste des villes de la communauté urbaine 
+        }
+
+        System.out.println("Communité chargée avec succès!");
+        this.community.displayUrbanCommunity();
+        this.pausePrints();
+    }
+	
+	/**
+     * Méthode pour charger la communauté urbaine avec des villes et leurs noms.
+     */
 	private void loadUrbanCommunity(String filePath) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {
         	String line;
@@ -219,14 +281,15 @@ public class MenuControl {
         		System.out.println("La contrainte d'accessibilité n'est pas respectée : "+ e.getMessage());
         		System.out.println("La solution naive sera utilisée");
         		this.community.naiveSolution();
+        		this.pausePrints();
         		this.community.displayCitiesAndNeighbors();
         		this.community.displayCitiesWithChargingPoint();
         	}
-        	this.displayMenu1();
 		}catch(IOException e) {
             System.out.println("Une erreur s'est produit lors de la lecture du fichier : " + e.getMessage());
         }
     }
+	
 	/**
 	 * Méthode pour traiter chaque ligne du fichier
 	 */
@@ -254,7 +317,9 @@ public class MenuControl {
 		}
 	}
 	
-	
+	/**
+	 * Méthode qui le nombre d'itération de l'algorithme et propose une solution plus optimale.
+	 */
 	private void automaticSolution() {
 		int k;
 		while (true) {
@@ -274,6 +339,9 @@ public class MenuControl {
         }
 		
 		this.slightlyLessNaiveAlgorithm(k);
+		this.community.displayCitiesAndNeighbors();
+		System.out.println("Le nombre de borne de recharge est : " + this.community.getNumberChargingPoints());
+		this.community.displayCitiesWithChargingPoint();
 	}
 	
 	/**
@@ -284,85 +352,136 @@ public class MenuControl {
         this.choiceReader.nextLine();
 	}
 	
+	/**
+	 * Choisie une ville aléatoirement.
+	 * 
+	 * @return ville aléatoire parmis les villes de communauté
+	 */
 	private City getRandomCity() {
         int randomIndex = random.nextInt(this.community.getCities().size());
         return this.community.getCities().get(randomIndex);
     }
 	
-	private void naiveAlgorithm(int k) {
-        int i = 0;
-        while (i < k) {
-            City randomCity = getRandomCity(); // Obtenir une ville au hasard dans la communauté
-            if (randomCity.hasChargingPoint()) {
-                try {
-					randomCity.removeChargingPoint();
-				} catch (ChargingPointNotFoundException e) {
-					System.out.println(e.getMessage());
-				}
-            } else {
-                try {
-					randomCity.addChargingPoint();
-				} catch (ChargingPointFoundException e) {
-					System.out.println(e.getMessage());
-				}
-            }
-            try {
-    			if(this.community.verifyAccessibilityConstraint(randomCity)) {
-    				i++;
-    			}
-    		} catch(AccessibilityConstraintNotVerifiedException e) {
-    			System.out.println(e.getMessage());
-    		}
-        }
-    }
-	
+	/**
+	 * Calcul le score de la communauté selon son état présent. Le score est le nombre de zones de recharge dans la communauté.
+	 * 
+	 * @return score de la communauté (nombre de zones de recharge)
+	 */
 	private int calculateScore() {
 	    return this.community.getNumberChargingPoints();
 	}
 
+	/**
+	 * Propose une solution plus optimale que la solution présente.
+	 * 
+	 * @param k le nombre d'itération de l'algorithme
+	 */
 	private void slightlyLessNaiveAlgorithm(int k) {
         int i = 0;
-        int currentScore = calculateScore(); // Calculer le score actuel de la solution
+        int currentScore = this.calculateScore(); // Calculer le score actuel de la solution
         while (i < k) {
             City randomCity = getRandomCity(); // Obtenir une ville au hasard dans la communauté
-            if (randomCity.hasChargingPoint()) {
-                try {
-					randomCity.removeChargingPoint();
-				} catch (ChargingPointNotFoundException e) {
-					System.out.println(e.getMessage());
-				}
-            } else {
-                try {
-					randomCity.addChargingPoint();
-				} catch (ChargingPointFoundException e) {
-					System.out.println(e.getMessage());
-				}
-            }
-            int updatedScore = calculateScore(); // Recalcul du score après la modification
-            if (updatedScore < currentScore) {
-                i = 0;
-                currentScore = updatedScore;
-            } else {
-            	 try {
-         			if(this.community.verifyAccessibilityConstraint(randomCity)) {
-         				i++;
-         			}
-         		} catch(AccessibilityConstraintNotVerifiedException e) {
-         			System.out.println(e.getMessage());
-         		}
-            }
+            try {
+	            if (randomCity.hasChargingPoint()) {
+	                randomCity.removeChargingPoint();
+	            } else {
+	                randomCity.addChargingPoint();
+	            }
+	
+	            int updatedScore = this.calculateScore();
+	            if (updatedScore < currentScore) {
+	                i = 0;
+	                currentScore = updatedScore;
+	            } else {
+	                // Rollback the charging point operation
+	                if (randomCity.hasChargingPoint()) {
+	                    randomCity.removeChargingPoint();
+	                } else {
+	                    randomCity.addChargingPoint();
+	                }
+	            }
+	            if (this.community.verifyAccessibilityConstraint(randomCity)) {
+	                i++;
+	            }
+	        } catch (ChargingPointNotFoundException | ChargingPointFoundException | AccessibilityConstraintNotVerifiedException e) {}
         }
     }
+	
+	/**
+	 * Méthode pour lire le chemin absolu du fichier à utiliser.
+	 * 
+	 * @return le chemin absolu au fichier
+	 */
+	private String readFilePath() {
+		Scanner filePathReader = new Scanner(System.in);
+		System.out.println("Préciser l'emplacement du fichier : ");
+		filePathReader.close();
+		return filePathReader.nextLine().trim();
+	}
+	
+	/**
+	 * Méthode pour stocker la communauté dans un fichier .txt.
+	 * Les villes sont stockées sous la forme : ville(X) 
+	 * Les routes sont stockées sous la forme : route(X,Y)
+	 * Les zones de recharge sont stockées sous la forme : recharge(X)
+	 * Tel que : X et Y représentent des noms des villes.
+	 */
+	private void saveCommunity() {
+		String filePath = this.readFilePath();
+		Set<String> visitedRoads = new HashSet<>(); // Pour stocker les routes sous la forme villeAvilleB
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            // Ecrire les villes
+            for (City city : this.community.getCities()) {
+                writer.write("ville(" + city.getName() + ")\n");
+            }
+
+            // Ecrire les routes
+            for (City city : this.community.getCities()) {
+                List<City> neighbors = city.getNeighbors();
+                for (City neighbor : neighbors) {
+                    String roadKey = city.getName() + neighbor.getName();
+                    String reverseRoadKey = neighbor.getName() + city.getName();
+                    if (!visitedRoads.contains(roadKey) && !visitedRoads.contains(reverseRoadKey)) {
+                        writer.write("route(" + city.getName() + "," + neighbor.getName() + ")\n");
+                        visitedRoads.add(roadKey);
+                    }
+                }
+            }
+
+            // Ecrires les villes avec une zone de recharge
+            for (City city : this.community.getCities()) {
+                if (city.hasChargingPoint()) {
+                    writer.write("recharge(" + city.getName() + ")\n");
+                }
+            }
+            System.out.println("Communauté sauvegardée avec succés!");
+        } catch (IOException e) {
+            System.out.println(e.getMessage() + ". Merci de vérifier le chemin introduit.");
+        }
+	}
 	
 	// **************************************************
     // Méthodes publiques
     // **************************************************
 	
 	/**
-     * Lance l'application en chargeant la communauté urbaine et affichant le premier menu.
-     */
+	 * Lance l'application en chargeant la communauté urbaine d'un fichier et affichant le premier menu.
+	 * 
+	 * @param filePath
+	 */
 	public void startApp(String filePath) {
 		System.out.println("Bienvenue dans le Gestionnaire de bornes de recharge !");
 		this.loadUrbanCommunity(filePath);
+		this.displayMainMenu();
+	}
+	
+	/**
+     * Lance l'application en chargeant la communauté urbaine et affichant le premier menu.
+     */
+	public void startApp() {
+		System.out.println("Bienvenue dans le Gestionnaire de bornes de recharge !");
+		this.loadUrbanCommunity();
+		this.displayManualMenu1();
 	}
 }
