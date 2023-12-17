@@ -56,6 +56,15 @@ public class UrbanCommunity {
 		this.cities.add(city);
 	}
 	
+	public boolean hasCity(String cityName){
+		for(City city : this.cities) {
+			if(city.getName().equals(cityName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
      * Retourne le nombre de villes avec une zone de recharge dans la communauté urbaine.
      * 

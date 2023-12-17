@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import up.mi.skdh.frontend.layouts.StartLayout;
 
 public class MainApp extends Application {
 	private Stage primaryStage;
