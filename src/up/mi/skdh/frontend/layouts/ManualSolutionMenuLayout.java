@@ -2,14 +2,19 @@ package up.mi.skdh.frontend.layouts;
 
 import java.util.Optional;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import up.mi.skdh.backend.UrbanCommunity;
 import up.mi.skdh.exceptions.AccessibilityConstraintNotVerifiedException;
@@ -56,6 +61,9 @@ public class ManualSolutionMenuLayout extends VBox {
         setSpacing(75);
         setAlignment(Pos.CENTER);
         this.getChildren().addAll(pageTitle, descriptionLabel, stateLabel, controlButtonsContainer, endButton);
+        BackgroundFill backgroundFill = new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY);
+        Background background = new Background(backgroundFill);
+        this.setBackground(background);
     }
 
     private void removeChargingPoint(Label state) {

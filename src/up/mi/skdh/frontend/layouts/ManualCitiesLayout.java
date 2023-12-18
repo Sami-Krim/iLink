@@ -18,6 +18,7 @@ import up.mi.skdh.backend.UrbanCommunity;
 public class ManualCitiesLayout extends VBox {
 	private Stage primaryStage;
 	private StartLayout starter;
+	private ManualRoadAdditionLayout roads;
 	private UrbanCommunity community;
 	
 	public ManualCitiesLayout(Stage primaryStage, int numberOfCities) {
@@ -26,7 +27,7 @@ public class ManualCitiesLayout extends VBox {
 		
         VBox inputFields = this.createCityInputFields(numberOfCities);
         
-        Label pageTitle = new Label("File Path Reader");
+        Label pageTitle = new Label("Ajouter des villes");
 		pageTitle.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #3137fd;");
 		
         ScrollPane scrollPane = new ScrollPane();
@@ -44,14 +45,20 @@ public class ManualCitiesLayout extends VBox {
         layoutWithButton.getChildren().addAll(pageTitle, scrollPane, executeButton, goBackButton);
         layoutWithButton.setAlignment(Pos.CENTER);
         layoutWithButton.setPadding(new Insets(10));
+        this.setAlignment(Pos.CENTER);
         setSpacing(30);
         this.getChildren().add(layoutWithButton);
 
     }
 	
 	private void switchStartLayout() {
-		starter = new StartLayout(this.primaryStage);
+		this.starter = new StartLayout(this.primaryStage);
 		this.primaryStage.setScene(new Scene(this.starter));
+	}
+	
+	private void switchAddRoadslayout() {
+		this.roads = new ManualRoadAdditionLayout(this.primaryStage, this.community);
+		this.primaryStage.setScene(new Scene(this.roads));
 	}
 
     private VBox createCityInputFields(int numberOfCities) {
@@ -71,6 +78,7 @@ public class ManualCitiesLayout extends VBox {
     }
     
 	private void addCities(VBox inputFields) {
+		boolean nextPage = true;
         for (Node node : inputFields.getChildren()) {
             if (node instanceof HBox) {
                 HBox cityInput = (HBox)node;
@@ -82,6 +90,7 @@ public class ManualCitiesLayout extends VBox {
                         this.community.addCity(city);
                     } else {
                     	this.community = new UrbanCommunity();
+                    	nextPage = false;
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Attention!");
                         alert.setHeaderText(null);
@@ -91,6 +100,9 @@ public class ManualCitiesLayout extends VBox {
                     }
                 }
             }
+        }
+        if(nextPage) {
+        	this.switchAddRoadslayout();
         }
     }
 }

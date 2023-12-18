@@ -64,8 +64,23 @@ public class CommunityManager {
 	public static void addChargingCity(UrbanCommunity community, String cityName, Label state) throws CityNotFoundException, ChargingPointFoundException, AccessibilityConstraintNotVerifiedException {
 		City city = community.findCity(cityName); //Rechercher la ville
 		city.addChargingPoint(); //Ajouter le point de chargement à la ville
-		System.out.println("Borne de recharge ajouter à la ville " + city.getName() + ".");
 		state.setText("Borne de recharge ajoutée à la ville " + cityName);
 		state.setStyle("-fx-font-size: 14px; -fx-text-fill: green;");
+	}
+	
+	public static void addRoad(UrbanCommunity community, String cityAName, String cityBName, Label state){
+		if (!community.hasRoad(cityAName, cityBName) && !community.hasRoad(cityBName, cityAName)) {
+	        try {
+	            community.addRoad(cityAName, cityBName);
+	            state.setText("Route ajoutée entre " + cityAName + " et " + cityBName);
+	            state.setStyle("-fx-font-size: 14px; -fx-text-fill: green;");
+	        } catch (CityNotFoundException e) {
+	            state.setText("Erreur: L'une des villes n'a pas été trouvée.");
+	            state.setStyle("-fx-font-size: 14px; -fx-text-fill: red;");
+	        }
+	    } else {
+	        state.setText("Une route existe déjà entre " + cityAName + " et " + cityBName);
+	        state.setStyle("-fx-font-size: 14px; -fx-text-fill: red;");
+	    }
 	}
 }

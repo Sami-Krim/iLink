@@ -21,17 +21,26 @@ public class FileManager {
 	
 	public static UrbanCommunity loadUrbanCommunity(String filePath, Label result) {
 		UrbanCommunity community = new UrbanCommunity();
+		boolean villeLineFound = false;
         try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {
         	String line;
         	while((line = fileReader.readLine())!=null) {
         		processFileLine(line, community);
+        		if (line.toLowerCase().startsWith("ville(") && !villeLineFound) {
+                    villeLineFound = true;
+                }
         	}
+        	if (!villeLineFound) {
+                result.setText("Erreur : le fichier ne possède aucune ville : " + filePath);
+                result.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: red;");
+                return null;
+            }
         	return community;
 		}catch(IOException e) {
             result.setText("Une erreur s'est produit lors de la lecture du fichier : " + filePath);
             result.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: red;");
+            return null;
         }
-		return community;
     }
 	
 	private static void processFileLine(String line, UrbanCommunity community) {
@@ -47,10 +56,12 @@ public class FileManager {
 		}else if(lowerCaseLine.startsWith("route(")) {
 			String[] cities = line.substring(6, line.length() - 1).replace(" ", "").split(",");//Extraire les noms des villes
 			if(cities.length == 2) {
-				community.addRoad(cities[0], cities[1]);
+				try {
+					community.addRoad(cities[0], cities[1]);
+				} catch (CityNotFoundException e) {}
 			}
 		}else if(lowerCaseLine.startsWith("recharge(")) {
-			String cityName = line.substring(9, line.length() - 2);
+			String cityName = line.substring(9, line.length() - 1);
 			try {
 				City city = community.findCity(cityName);
 				city.addChargingPoint();

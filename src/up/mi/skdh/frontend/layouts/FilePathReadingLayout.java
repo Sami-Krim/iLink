@@ -4,13 +4,18 @@ package up.mi.skdh.frontend.layouts;
 
 import java.io.File;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import up.mi.skdh.backend.UrbanCommunity;
@@ -26,7 +31,7 @@ public class FilePathReadingLayout extends VBox {
 	public FilePathReadingLayout(Stage primaryStage) {
 		this.community = new UrbanCommunity();
 		this.primaryStage = primaryStage;
-		Label pageTitle = new Label("File Path Reader");
+		Label pageTitle = new Label("Emplacement du fichier");
 		pageTitle.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #3137fd;");
 		TextField filePathInput = new TextField();
         filePathInput.setText("Entrez le chemin au fichier");
@@ -59,7 +64,7 @@ public class FilePathReadingLayout extends VBox {
                 String filePath = selectedFile.getAbsolutePath();
                 filePathInput.setText(filePath);
                 this.community = FileManager.loadUrbanCommunity(filePath, resultReading);
-                nextButton.setOnAction(e -> this.switchProblemResolutionMenuLayout());
+                if(this.community != null) nextButton.setOnAction(e -> this.switchProblemResolutionMenuLayout());
             }
         });
         
@@ -68,7 +73,9 @@ public class FilePathReadingLayout extends VBox {
         setSpacing(75);
         setAlignment(Pos.CENTER);
         this.getChildren().addAll(pageTitle, filePathContainer, resultReading, navigationButtonsContainer);
-        
+        BackgroundFill backgroundFill = new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY);
+        Background background = new Background(backgroundFill);
+        this.setBackground(background);
 	}
 	
 	private void switchStartLayout() {

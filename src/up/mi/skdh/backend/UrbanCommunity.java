@@ -65,6 +65,17 @@ public class UrbanCommunity {
 		return false;
 	}
 	
+	public boolean hasRoad(String cityAName, String cityBName) {
+	    try {
+	        City cityA = this.findCity(cityAName);
+	        City cityB = this.findCity(cityBName);
+
+	        return cityA.getNeighbors().contains(cityB);
+	    } catch (CityNotFoundException e) {}
+	    return false;
+	}
+
+	
 	/**
      * Retourne le nombre de villes avec une zone de recharge dans la communauté urbaine.
      * 
@@ -103,17 +114,11 @@ public class UrbanCommunity {
      * @param cityBName Le nom de la deuxième ville
      * @return L'état de l'ajout de la route
      */
-	public boolean addRoad(String cityAName, String cityBName) {
-		try {
-			City cityA = this.findCity(cityAName); //Rechercher la première ville
-			City cityB = this.findCity(cityBName); //Rechercher la deuxième ville
-			cityA.addNeighbor(cityB); //Ajouter la première ville à la liste des voisins de la deuxième ville
-			cityB.addNeighbor(cityA); //Ajouter la deuxième ville à la liste des voisins de la première ville
-			return true;
-		} catch(CityNotFoundException e) { //Si l'une des villes n'a pas été trouvé
-			System.out.println(e.getMessage());
-		}
-		return false;
+	public void addRoad(String cityAName, String cityBName) throws CityNotFoundException{
+		City cityA = this.findCity(cityAName); //Rechercher la première ville
+		City cityB = this.findCity(cityBName); //Rechercher la deuxième ville
+		cityA.addNeighbor(cityB); //Ajouter la première ville à la liste des voisins de la deuxième ville
+		cityB.addNeighbor(cityA); //Ajouter la deuxième ville à la liste des voisins de la première ville
 	}
 	
 	/**
@@ -182,58 +187,5 @@ public class UrbanCommunity {
 			}
 		}
 	}
-	
-	/**
-     * Affiche les villes dans la communauté urbaine ayant un point de recharge.
-     */
-	public void displayCitiesWithChargingPoint() {
-		System.out.print("Les villes avec une zone de recharge sont : ");
-		for(City city:cities) {
-			if(city.hasChargingPoint()) {
-				System.out.print(city.getName() + " ");
-			}
-		}
-		System.out.println();
-	}
-	
-	/**
-     * Affiche les villes dans la communauté urbaine n'ayant pas un point de recharge.
-     */
-	public void displayCitiesWithNoChargingPoint() {
-		System.out.print("Les villes n'ayant pas une zone de recharge sont : ");
-		for(City city:cities) {
-			if(!city.hasChargingPoint()) {
-				System.out.print(city.getName() + " ");
-			}
-		}
-		System.out.println();
-	}
-	
-	/**
-     * Affiche toutes les villes dans la communauté urbaine.
-     */
-	public void displayUrbanCommunity() {
-		System.out.print("Les villes de la communauté sont : ");
-		for(City city:cities) {
-			System.out.print(city.getName() + " ");
-		}
-		System.out.println();
-	}
-	
-	/**
-     * Affiche chaque ville dans la communauté urbaine avec ses voisins.
-     */
-    public void displayCitiesAndNeighbors() {
-    	System.out.println("Les villes de la communauté avec leurs voisins: ");
-        for (City city : cities) {
-            System.out.print("Ville: " + city.getName() + ", Voisins: ");
-            ArrayList<City> neighbors = city.getNeighbors();
-            for (City neighbor : neighbors) {
-                System.out.print(neighbor.getName() + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
 }
 	

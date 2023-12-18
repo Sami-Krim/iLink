@@ -2,14 +2,18 @@ package up.mi.skdh.frontend.layouts;
 
 import java.io.File;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import up.mi.skdh.backend.UrbanCommunity;
@@ -65,7 +69,9 @@ public class SaveCommunityLayout extends VBox {
         setSpacing(75);
         setAlignment(Pos.CENTER);
         this.getChildren().addAll(pageTitle, filePathContainer, result, goBackButton);
-        
+        BackgroundFill backgroundFill = new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY);
+        Background background = new Background(backgroundFill);
+        this.setBackground(background);
 	}
 	
 
