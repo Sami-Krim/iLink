@@ -55,24 +55,35 @@ public class UrbanCommunity {
 	public void addCity(City city){
 		this.cities.add(city);
 	}
-	
+	/**
+	 * Permet de v¨¦rifie si une ville avec le nom sp¨¦cifi¨¦ existe dans la liste des villes 
+	 * @param cityName
+	 * @return true si la ville ¨¤ le m¨ºme nom, sinon false
+	 */
 	public boolean hasCity(String cityName){
 		for(City city : this.cities) {
 			if(city.getName().equals(cityName)) {
-				return true;
+				return true; //La ville avec le nom a ¨¦t¨¦ trouv¨¦e.
 			}
 		}
-		return false;
+		return false;//La ville avec le nom n'as pas ¨¦t¨¦ trouv¨¦e.
 	}
-	
+	/**
+	 * Permet de v¨¦rifie si une route existe ou pas entre ces deux villes.
+	 * @param cityAName
+	 * @param cityBName
+	 * @return l'existance d'une route entre les deux villes.
+	 */
 	public boolean hasRoad(String cityAName, String cityBName) {
 	    try {
+	    	//Recherche des objets City correspondants au nom de ville 
 	        City cityA = this.findCity(cityAName);
 	        City cityB = this.findCity(cityBName);
-
+	        
+	        //V¨¦rifier si la villeA et villeB sont voisin
 	        return cityA.getNeighbors().contains(cityB);
 	    } catch (CityNotFoundException e) {}
-	    return false;
+	    return false;//L'une des villes n'a pas ¨¦t¨¦ trouv¨¦e, donc il n'y a pas de route entre ces 2 villes.
 	}
 
 	
