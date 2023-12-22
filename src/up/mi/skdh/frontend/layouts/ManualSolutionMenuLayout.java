@@ -25,10 +25,26 @@ import up.mi.skdh.frontend.managers.CommunityManager;
 import up.mi.skdh.frontend.managers.DisplayManager;
 
 public class ManualSolutionMenuLayout extends VBox {
+	/**
+	 * Le stage auquel la page est liée
+	 */
 	private Stage primaryStage;
+	/**
+	 * La page de résolution du problème
+	 */
 	private ProblemResolutionMenuLayout resolutionMenu;
+	/**
+	 * La communauté courrante
+	 */
 	private UrbanCommunity community;
 	
+	/**
+	 * Constructeur de la classe.
+	 * Initialise la mise en page et le fonctionnement des différents composants.
+	 * 
+	 * @param primaryStage Le stage principale de l'application
+	 * @param community La communauté a utilisé
+	 */
 	public ManualSolutionMenuLayout(Stage primaryStage, UrbanCommunity community) {
 		this.primaryStage = primaryStage;
 		this.community = community;
@@ -66,6 +82,11 @@ public class ManualSolutionMenuLayout extends VBox {
         this.setBackground(background);
     }
 
+	/**
+	 * Méthode pour traiter graphiquement la suppression d'une zone de recharge
+	 * 
+	 * @param state Le label d'état de l'opération
+	 */
     private void removeChargingPoint(Label state) {
     	TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Supprimer une zone de recharge");
@@ -86,6 +107,12 @@ public class ManualSolutionMenuLayout extends VBox {
         });
     }
     
+    /**
+     * Méthode pour traiter graphiquement les messages d'erreur
+     * 
+     * @param title Le titre de la fenêtre d'erreur
+     * @param message L'information a affiché
+     */
     private void displayErrorMessage(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -94,6 +121,11 @@ public class ManualSolutionMenuLayout extends VBox {
         alert.showAndWait();
     }
 
+    /**
+	 * Méthode pour traiter graphiquement l'ajout d'une zone de recharge
+	 * 
+	 * @param state Le label d'état de l'opération
+	 */
     private void addChargingPoint(Label state) {
     	TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Ajouter une zone de recharge");
@@ -114,6 +146,9 @@ public class ManualSolutionMenuLayout extends VBox {
         });
 	}
     
+    /**
+	 * Méthode pour passer à la page de résolution du problème
+	 */
     private void switchProblemResolutionMenuLayout() {
 		this.resolutionMenu = new ProblemResolutionMenuLayout(this.primaryStage, this.community);
 		this.primaryStage.setScene(new Scene(this.resolutionMenu));
