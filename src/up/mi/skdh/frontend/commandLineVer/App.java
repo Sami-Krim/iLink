@@ -1,6 +1,10 @@
-	package up.mi.skdh.frontend.commandLineVer;
-	
-	/**
+package up.mi.skdh.frontend.commandLineVer;
+
+import javafx.application.Application;
+import javafx.stage.Stage;
+import up.mi.skdh.frontend.MainApp;
+
+/**
 	 * Classe principale de l'application, responsable du démarrage de l'interface utilisateur.
 	 * Cette classe contient la méthode principale (main) qui lance l'application pour manipuler la communauté urbaine.
 	 * 
@@ -23,8 +27,11 @@
 			if(args.length > 0) {
 				app.startApp(args[0]);
 			} else {
-				app.startApp();
+				launchMainApp();
 			}
 		}
-	
+		
+		private static void launchMainApp() {
+	        Application.launch(MainApp.class);
+	    }
 	}

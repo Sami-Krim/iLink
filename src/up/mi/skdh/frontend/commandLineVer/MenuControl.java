@@ -427,13 +427,14 @@ public class MenuControl {
 	 * @return le chemin absolu au fichier
 	 */
 	private String readFilePath() {
-		Scanner filePathReader = new Scanner(System.in);
 		System.out.println("Préciser l'emplacement du fichier : ");
 		String filePath = "";
 		do {
-			 filePath = filePathReader.nextLine().trim();
+			 filePath = this.choiceReader.nextLine().trim();
 		} while(filePath == "");
-		filePathReader.close();
+		if (!filePath.toLowerCase().endsWith(".txt")) {
+        	filePath += ".txt";
+        }
 		return filePath;
 	}
 	
