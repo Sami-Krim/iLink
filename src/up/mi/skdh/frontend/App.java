@@ -1,7 +1,7 @@
-package up.mi.skdh.frontend.commandLineVer;
+package up.mi.skdh.frontend;
 
 import javafx.application.Application;
-import up.mi.skdh.frontend.MainApp;
+import up.mi.skdh.frontend.commandLineVer.MenuControl;
 
 /**
 	 * Classe principale de l'application, responsable du démarrage de l'interface utilisateur.
