@@ -16,11 +16,30 @@ import up.mi.skdh.backend.City;
 import up.mi.skdh.backend.UrbanCommunity;
 
 public class ManualCitiesLayout extends VBox {
+	/**
+	 * Le stage auquel la page est liée
+	 */
 	private Stage primaryStage;
+	/**
+	 * La Landing page
+	 */
 	private StartLayout starter;
+	/**
+	 * La page d'ajout des routes
+	 */
 	private ManualRoadAdditionLayout roads;
+	/**
+	 * La communauté courrante
+	 */
 	private UrbanCommunity community;
 	
+	/**
+	 * Constructeur de la classe.
+	 * Initialise la mise en page et le fonctionnement des différents composants.
+	 * 
+	 * @param primaryStage Le stage principale de l'application
+	 * @param numberOfCities Le nombre de villes à ajouter
+	 */
 	public ManualCitiesLayout(Stage primaryStage, int numberOfCities) {
 		this.primaryStage = primaryStage;
 		this.community = new UrbanCommunity();
@@ -51,16 +70,28 @@ public class ManualCitiesLayout extends VBox {
 
     }
 	
+	/**
+	 * Méthode pour passer à la landing page
+	 */
 	private void switchStartLayout() {
 		this.starter = new StartLayout(this.primaryStage);
 		this.primaryStage.setScene(new Scene(this.starter));
 	}
 	
+	/**
+	 * Méthode pour passer à la page d'ajout des routes entre les villes
+	 */
 	private void switchAddRoadslayout() {
 		this.roads = new ManualRoadAdditionLayout(this.primaryStage, this.community);
 		this.primaryStage.setScene(new Scene(this.roads));
 	}
 
+	/**
+	 * Méthode pour créer les inputs de textes pour lire les noms des villes
+	 * 
+	 * @param numberOfCities Nombre de villes à ajouter
+	 * @return La liste des conteneur des inputs pour lire les noms des villes
+	 */
     private VBox createCityInputFields(int numberOfCities) {
         VBox inputFields = new VBox(10);
         inputFields.setPadding(new Insets(10));
@@ -77,10 +108,15 @@ public class ManualCitiesLayout extends VBox {
         return inputFields;
     }
     
+    /**
+     * Méthode pour créer les villes à partir des valeurs des inputs de l'interface
+     * 
+     * @param inputFields La liste des conteneur des inputs pour lire les noms des villes
+     */
 	private void addCities(VBox inputFields) {
 		boolean nextPage = true;
-        for (Node node : inputFields.getChildren()) {
-            if (node instanceof HBox) {
+        for (Node node : inputFields.getChildren()) { // Passer par tous les noeuds (itextInputs)
+            if (node instanceof HBox) { // Chaque noeud représente une HBox (Label + TextInput)
                 HBox cityInput = (HBox)node;
                 TextField textField = (TextField)cityInput.getChildren().get(1);
                 String cityName = textField.getText();
@@ -88,7 +124,7 @@ public class ManualCitiesLayout extends VBox {
                     if (!this.community.hasCity(cityName)) {
                         City city = new City(cityName);
                         this.community.addCity(city);
-                    } else {
+                    } else { // traiter le cas des duplicats
                     	this.community = new UrbanCommunity();
                     	nextPage = false;
                         Alert alert = new Alert(Alert.AlertType.ERROR);

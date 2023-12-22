@@ -21,13 +21,36 @@ import javafx.stage.Stage;
 import up.mi.skdh.backend.UrbanCommunity;
 import up.mi.skdh.frontend.managers.FileManager;
 
+/**
+ * La mise en page de la page de lecture du chemin du fichier de chargement de la communauté de l'application.
+ * 
+ * @author Sami KRIM
+ * @author Daniel HUANG
+ */
 public class FilePathReadingLayout extends VBox {
+	/**
+	 * Le stage auquel la page est liée
+	 */
 	private Stage primaryStage;
+	/**
+	 * La Landing page
+	 */
 	private StartLayout starter;
+	/**
+	 * La page de résolution du problème
+	 */
 	private ProblemResolutionMenuLayout resolutionMenu;
+	/**
+	 * La communauté courrante
+	 */
 	private UrbanCommunity community;
 	
-	
+	/**
+	 * Constructeur de la classe.
+	 * Initialise la mise en page et le fonctionnement des différents composants.
+	 * 
+	 * @param primaryStage Le stage principale de l'application
+	 */
 	public FilePathReadingLayout(Stage primaryStage) {
 		this.community = new UrbanCommunity();
 		this.primaryStage = primaryStage;
@@ -78,11 +101,17 @@ public class FilePathReadingLayout extends VBox {
         this.setBackground(background);
 	}
 	
+	/**
+	 * Méthode pour passer à la landing page
+	 */
 	private void switchStartLayout() {
 		starter = new StartLayout(this.primaryStage);
 		this.primaryStage.setScene(new Scene(this.starter));
 	}
 	
+	/**
+	 * Méthode pour passer à la page de résolution du problème
+	 */
 	private void switchProblemResolutionMenuLayout() {
 		this.resolutionMenu = new ProblemResolutionMenuLayout(this.primaryStage, this.community);
 		this.primaryStage.setScene(new Scene(this.resolutionMenu));

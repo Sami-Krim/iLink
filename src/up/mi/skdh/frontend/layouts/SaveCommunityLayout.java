@@ -19,11 +19,33 @@ import javafx.stage.Stage;
 import up.mi.skdh.backend.UrbanCommunity;
 import up.mi.skdh.frontend.managers.FileManager;
 
+/**
+ * La mise en page de la page de lecture du chemin du fichier d'enregistrement de la communauté de l'application.
+ * 
+ * @author Sami KRIM
+ * @author Daniel HUANG
+ */
 public class SaveCommunityLayout extends VBox {
+	/**
+	 * Le stage auquel la page est liée
+	 */
 	private Stage primaryStage;
+	/**
+	 * La page de résolution du problème
+	 */
 	private ProblemResolutionMenuLayout resolutionMenu;
+	/**
+	 * La communauté courrante
+	 */
 	private UrbanCommunity community;
 	
+	/**
+	 * Constructeur de la classe.
+	 * Initialise la mise en page et le fonctionnement des différents composants.
+	 * 
+	 * @param primaryStage Le stage principale de l'application
+	 * @param community La communauté a utilisé
+	 */
 	public SaveCommunityLayout(Stage primaryStage, UrbanCommunity community) {
 		this.primaryStage = primaryStage;
 		this.community = community;
@@ -74,8 +96,9 @@ public class SaveCommunityLayout extends VBox {
         this.setBackground(background);
 	}
 	
-
-	
+	/**
+	 * Méthode pour passer à la page de résolution du problème
+	 */
 	private void switchProblemResolutionMenuLayout() {
 		this.resolutionMenu = new ProblemResolutionMenuLayout(this.primaryStage, this.community);
 		this.primaryStage.setScene(new Scene(this.resolutionMenu));

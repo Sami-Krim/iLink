@@ -21,11 +21,30 @@ import up.mi.skdh.frontend.managers.CommunityManager;
 import up.mi.skdh.frontend.managers.DisplayManager;
 
 public class ProblemResolutionMenuLayout extends ScrollPane {
+	/**
+	 * Le stage auquel la page est liée
+	 */
 	private Stage primaryStage;
+	/**
+	 * La page d'enregistrement de la communauté
+	 */
 	private SaveCommunityLayout saveCommunity;
+	/**
+	 * La page de résolution manuelle
+	 */
 	private ManualSolutionMenuLayout manualSolution;
+	/**
+	 * La communauté courrante
+	 */
 	private UrbanCommunity community;
 	
+	/**
+	 * Constructeur de la classe.
+	 * Initialise la mise en page et le fonctionnement des différents composants.
+	 * 
+	 * @param primaryStage Le stage principale de l'application
+	 * @param community La communauté a utilisé
+	 */
 	public ProblemResolutionMenuLayout(Stage primaryStage, UrbanCommunity community) {
 		this.primaryStage = primaryStage;
 		this.community = community;
@@ -81,11 +100,15 @@ public class ProblemResolutionMenuLayout extends ScrollPane {
 		this.setVvalue(0);
 	}
 	
-	private void switchSaveCommunityLayout() {
-		saveCommunity = new SaveCommunityLayout(this.primaryStage, this.community);
-		this.primaryStage.setScene(new Scene(this.saveCommunity));
-	}
-	
+	/**
+	 * Méthode pour traiter le choix fait par l'utilisateur sur le Menu des choix et naviguer entre les pages correspondantes aux choix
+	 * 
+	 * @param selectedChoice Le choix de l'utilisateur
+	 * @param menu L'objet portant le menu des choix
+	 * @param execute L'objet du boutton d'execution du choix
+	 * @param page Le label du titre de la page
+	 * @param lbl Le label d'état de la communauté
+	 */
 	private void executeSelectedChoice(String selectedChoice, ChoiceBox<String> menu, Button execute, Label page, Label lbl) {
         switch (selectedChoice) {
             case "Résoudre manuellement":
@@ -102,13 +125,11 @@ public class ProblemResolutionMenuLayout extends ScrollPane {
                 result.ifPresent(iterations -> {
                     try {
                         int numberOfIterations = Integer.parseInt(iterations);
-                        // Call the method that handles automatic solution with the provided number of iterations
                         CommunityManager.slightlyLessNaiveAlgorithm(this.community, numberOfIterations);
                         ProblemResolutionMenuLayout refreshPage = new ProblemResolutionMenuLayout(this.primaryStage, this.community);
                 		this.primaryStage.setScene(new Scene(refreshPage));
                     } catch (NumberFormatException e) {
-                        // Handle invalid input
-                        // For example, show an error message dialog
+                        // Choix invalide
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Error");
                         alert.setHeaderText(null);
@@ -118,7 +139,8 @@ public class ProblemResolutionMenuLayout extends ScrollPane {
                 });
                 break;
             case "Sauvegarder":
-                this.switchSaveCommunityLayout();
+            	saveCommunity = new SaveCommunityLayout(this.primaryStage, this.community);
+        		this.primaryStage.setScene(new Scene(this.saveCommunity));
                 break;
             case "Fin":
             	page.setText("FIN !!");

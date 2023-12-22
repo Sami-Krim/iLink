@@ -23,7 +23,6 @@ import up.mi.skdh.backend.UrbanCommunity;
  * @author Sami KRIM
  * @author Daniel HUANG
  */
-
 public class MenuControl {
 	// **************************************************
     // Attributs
@@ -103,44 +102,6 @@ public class MenuControl {
 	}
 	
 	/**
-     * Affiche le premier menu pour la résolution manuelle afin d'ajouter des liaisons entre les villes.
-     */
-	private void displayManualMenu1() {
-		int choice = 0;
-		do {
-			System.out.println("<<<<<<<<<<<<<< Menu >>>>>>>>>>>>>>");
-			System.out.println("1: Ajouter une route");
-			System.out.println("2: Fin");
-			try {
-				choice = choiceReader.nextInt();
-				
-				switch(choice) {
-				case 1:
-					this.community.displayUrbanCommunity();
-					this.addRoad(); //Ajouter une route
-					this.pausePrints();
-					this.community.displayCitiesAndNeighbors();
-					break;
-				case 2:
-					this.community.displayCitiesAndNeighbors(); //Afficher les villes et leurs voisins
-					this.pausePrints();
-					//this.displayManualMenu2(); //Passer au menu de gestion des bornes de recharges
-					this.displayMainMenu();
-					break;
-				default: //Si le choix n'est pas valid
-					System.out.println("Choix invalide. Veuillez choisir une autre fois");
-					break;
-				}
-				this.pausePrints(); //Pauser l'affichage
-			} catch (InputMismatchException e) {
-				System.out.println("Merci d'introduire un <<nombre>> correspondant à l'un des choix précédent");
-				choiceReader.next();
-			}
-		} while(choice != 2);
-		
-	}
-	
-	/**
      * Affiche le deuxième menu la résolution manuelle afin de gérer les bornes de recharge.
      */
 	private void displayManualMenu2() {
@@ -182,20 +143,6 @@ public class MenuControl {
 	}
 	
 	/**
-     * Méthode pour ajouter une route entre deux villes.
-     */
-	private void addRoad(){
-		System.out.println("Donnez le nom des villes que vous souhaitez relier avec une route.");
-		System.out.println("Nom de la première ville : ");
-		String cityAName = choiceReader.next(); //Lire le nom de la première ville
-		System.out.println("Nom de la deuxième ville : ");
-		String cityBName = choiceReader.next(); //Lire le nom de la deuxième ville
-		if(community.addRoadLC(cityAName, cityBName)){ //Ajouter une route entre les deux villes.
-			System.out.println("Route ajoutée avec succés entre " + cityAName + " et " + cityBName + ".");
-		}
-	}
-	
-	/**
      * Méthode pour ajouter une borne de recharge à une ville.
      */
 	private void addChargingCity() {
@@ -233,39 +180,6 @@ public class MenuControl {
 	        System.out.println(e.getMessage());
 	    }
 	}
-	
-	/**
-     * Méthode pour charger la communauté urbaine avec des villes et leurs noms.
-     */
-	private void loadUrbanCommunity() {
-		int numberOfCities;
-        while (true) {
-            try {
-                System.out.println("Merci d'introduire le nombre de villes : ");
-                numberOfCities = this.choiceReader.nextInt(); //Lire le nombre de villes de la communauté urbaine
-                if (numberOfCities >= 0) {
-                	break;
-                } else {
-                	throw new InputMismatchException();
-                }
-            } catch (InputMismatchException e) { //Si la valeur introduite n'est pas un nombre entier
-                System.out.println("Erreur : Entrez un <<nombre>> <<entier>> <<positif>> pour le nombre de villes.");
-            } finally {
-            	this.choiceReader.nextLine(); //Consommer l'entrée précédente
-            }
-        }
-
-        for (int i = 0; i < numberOfCities; i++) {
-            System.out.print("Entrez le nom de la ville " + (i + 1) + " : ");
-            String cityName = this.choiceReader.nextLine(); //Lire le nom de la ville
-            City city = new City(cityName); //Créer une nouvelle ville
-            this.community.addCity(city); //Ajouter la ville à la liste des villes de la communauté urbaine 
-        }
-
-        System.out.println("Communité chargée avec succès!");
-        this.community.displayUrbanCommunity();
-        this.pausePrints();
-    }
 	
 	/**
 	 * Méthode pour charger la communauté urbaine avec des villes et leurs noms.
@@ -495,14 +409,5 @@ public class MenuControl {
 		if(result) {
 			this.displayMainMenu();
 		}
-	}
-	
-	/**
-     * Lance l'application en chargeant la communauté urbaine et affichant le premier menu.
-     */
-	public void startApp() {
-		System.out.println("Bienvenue dans le Gestionnaire de bornes de recharge !");
-		this.loadUrbanCommunity();
-		this.displayManualMenu1();
 	}
 }

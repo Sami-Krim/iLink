@@ -17,10 +17,26 @@ import up.mi.skdh.frontend.managers.CommunityManager;
 import up.mi.skdh.frontend.managers.DisplayManager;
 
 public class ManualRoadAdditionLayout extends VBox {
+	/**
+	 * Le stage auquel la page est liée
+	 */
 	private Stage primaryStage;
+	/**
+	 * La page de résolution du problème
+	 */
 	private ProblemResolutionMenuLayout resolutionMenu;
+	/**
+	 * La communauté courrante
+	 */
 	private UrbanCommunity community;
 
+	/**
+	 * Constructeur de la classe.
+	 * Initialise la mise en page et le fonctionnement des différents composants.
+	 * 
+	 * @param primaryStage Le stage principale de l'application
+	 * @param community La communauté a utilisé
+	 */
     public ManualRoadAdditionLayout(Stage primaryStage, UrbanCommunity community) {
     	this.primaryStage = primaryStage;
     	this.community = community;
@@ -72,6 +88,9 @@ public class ManualRoadAdditionLayout extends VBox {
         this.setBackground(background);
     }
     
+    /**
+	 * Méthode pour passer à la page de résolution du problème
+	 */
     private void switchProblemResolutionMenuLayout() {
 		this.resolutionMenu = new ProblemResolutionMenuLayout(this.primaryStage, this.community);
 		this.primaryStage.setScene(new Scene(this.resolutionMenu));

@@ -1,7 +1,6 @@
 package up.mi.skdh.frontend.commandLineVer;
 
 import javafx.application.Application;
-import javafx.stage.Stage;
 import up.mi.skdh.frontend.MainApp;
 
 /**
@@ -16,9 +15,8 @@ import up.mi.skdh.frontend.MainApp;
 	public class App {
 		/**
 	     * Entrée de l'application.
-	     * Crée une instance de MenuControl et lance l'application en appelant sa méthode startApp().
-	     * Si aucun chemin d'un fichier est précisé lors de l'execution, la communauté sera introduite manuellement
-	     * sinon, par l'intermidiaire d'un fichier texte.
+	     * Crée une instance de MenuControl et lance l'application en appelant sa méthode startApp() Si un chemin absolu vers un fichier texte a été spécifié
+	     * Si aucun chemin d'un fichier est précisé lors de l'execution, l'interface graphique va être affiché.
 	     * 
 	     * @param args Les arguments en ligne de commande.
 	     */
@@ -27,10 +25,13 @@ import up.mi.skdh.frontend.MainApp;
 			if(args.length > 0) {
 				app.startApp(args[0]);
 			} else {
-				launchMainApp();
+				launchMainApp(); 
 			}
 		}
 		
+		/**
+		 * Méthode pour démarrer l'interface graphique de l'application
+		 */
 		private static void launchMainApp() {
 	        Application.launch(MainApp.class);
 	    }

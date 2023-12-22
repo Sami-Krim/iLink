@@ -19,10 +19,32 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/**
+ * La mise en page de la Landing Page de l'application.
+ * 
+ * @author Sami KRIM
+ * @author Daniel HUANG
+ */
 public class StartLayout extends VBox {
+	/**
+	 * Le stage auquel la page est liée
+	 */
 	private Stage primaryStage;
+	/**
+	 * La page de lecture du chemin du fichier de chargement
+	 */
 	private FilePathReadingLayout fileReader;
+	/**
+	 * La page de lecture manuelle des villes
+	 */
+	private ManualCitiesLayout manualReader;
 	
+	/**
+	 * Constructeur de la classe.
+	 * Initialise la mise en page et le fonctionnement des différents composants.
+	 * 
+	 * @param primaryStage Le stage principale de l'application
+	 */
 	public StartLayout(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		String imagePath = "/iLink_transparent_background.png";
@@ -57,11 +79,17 @@ public class StartLayout extends VBox {
         this.setBackground(background);
     }
 	
+	/**
+	 * Méthode pour passer à la page de lecture du chemin
+	 */
 	private void switchFilePathReadingLayout() {
 		fileReader = new FilePathReadingLayout(this.primaryStage);
 		this.primaryStage.setScene(new Scene(this.fileReader));
 	}
 	
+	/**
+	 * Méthode pour passer à la page de lecture manuelle
+	 */
 	private void switchManualReadingLayout() {
 		TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Chargement manuel");
@@ -73,8 +101,8 @@ public class StartLayout extends VBox {
             try {
             	int numberOfCities = Integer.parseInt(cities);
                 if (numberOfCities > 0) {
-                	ManualCitiesLayout manualReader = new ManualCitiesLayout(this.primaryStage, numberOfCities);
-                    this.primaryStage.setScene(new Scene(manualReader));
+                	this.manualReader = new ManualCitiesLayout(this.primaryStage, numberOfCities);
+                    this.primaryStage.setScene(new Scene(this.manualReader));
                 } else {
                     // Show an error message for non-positive input
                     Alert alert = new Alert(Alert.AlertType.ERROR);
