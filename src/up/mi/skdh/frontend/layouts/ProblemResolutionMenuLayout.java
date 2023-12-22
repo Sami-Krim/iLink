@@ -34,12 +34,6 @@ public class ProblemResolutionMenuLayout extends ScrollPane {
 		
 		Label pageTitle = new Label("Menu principal");
 		pageTitle.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #3137fd;");
-		Label citiesLabel = DisplayManager.displayUrbanCommunity(community);
-		citiesLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
-		Label citiesWCPLabel = DisplayManager.displayCitiesWithChargingPoint(community);
-		citiesWCPLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
-		Label citiesWNCPLabel = DisplayManager.displayCitiesWithNoChargingPoint(community);
-		citiesWNCPLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
 		Label communityLabel = new Label("");
 		try {
 			if(this.community.verifyAccessibilityConstraint()) {
@@ -51,6 +45,13 @@ public class ProblemResolutionMenuLayout extends ScrollPane {
 			communityLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;");
 			this.community.naiveSolution();
 		}
+		
+		Label citiesLabel = DisplayManager.displayUrbanCommunity(community);
+		citiesLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
+		Label citiesWCPLabel = DisplayManager.displayCitiesWithChargingPoint(community);
+		citiesWCPLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
+		Label citiesWNCPLabel = DisplayManager.displayCitiesWithNoChargingPoint(community);
+		citiesWNCPLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
         
         ChoiceBox<String> menuChoices = new ChoiceBox<>();
         menuChoices.getItems().addAll("Résoudre manuellement", "Résoudre automatiquement", "Sauvegarder", "Fin");
