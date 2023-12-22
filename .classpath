@@ -7,7 +7,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JFX17"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JF17"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JUNG"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
