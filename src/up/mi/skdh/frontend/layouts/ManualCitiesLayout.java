@@ -15,6 +15,12 @@ import javafx.stage.Stage;
 import up.mi.skdh.backend.City;
 import up.mi.skdh.backend.UrbanCommunity;
 
+/**
+ * La mise en page de la page d'ajout manuelle des villes de la communauté de l'application.
+ * 
+ * @author Sami KRIM
+ * @author Daniel HUANG
+ */
 public class ManualCitiesLayout extends VBox {
 	/**
 	 * Le stage auquel la page est liée

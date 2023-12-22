@@ -24,6 +24,12 @@ import up.mi.skdh.exceptions.CityNotFoundException;
 import up.mi.skdh.frontend.managers.CommunityManager;
 import up.mi.skdh.frontend.managers.DisplayManager;
 
+/**
+ * La mise en page de la page de résolution manuelle de l'application.
+ * 
+ * @author Sami KRIM
+ * @author Daniel HUANG
+ */
 public class ManualSolutionMenuLayout extends VBox {
 	/**
 	 * Le stage auquel la page est liée

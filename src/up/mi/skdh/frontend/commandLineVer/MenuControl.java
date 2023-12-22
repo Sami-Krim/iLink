@@ -185,6 +185,7 @@ public class MenuControl {
 	 * Méthode pour charger la communauté urbaine avec des villes et leurs noms.
 	 * 
 	 * @param filePath le chemin absolu auf fichier de la communauté
+	 * @return True si la ville a été chargée avec succès, False sinon.
 	 */
 	private boolean loadUrbanCommunity(String filePath) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {

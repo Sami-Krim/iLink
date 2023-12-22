@@ -16,6 +16,12 @@ import up.mi.skdh.backend.UrbanCommunity;
 import up.mi.skdh.frontend.managers.CommunityManager;
 import up.mi.skdh.frontend.managers.DisplayManager;
 
+/**
+ * La mise en page de la page d'ajout manuelle des routes de la communauté de l'application.
+ * 
+ * @author Sami KRIM
+ * @author Daniel HUANG
+ */
 public class ManualRoadAdditionLayout extends VBox {
 	/**
 	 * Le stage auquel la page est liée

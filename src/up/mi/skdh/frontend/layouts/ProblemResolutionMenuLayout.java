@@ -20,6 +20,12 @@ import up.mi.skdh.exceptions.AccessibilityConstraintNotVerifiedException;
 import up.mi.skdh.frontend.managers.CommunityManager;
 import up.mi.skdh.frontend.managers.DisplayManager;
 
+/**
+ * La mise en page de la page de Menu principale 'menu de résolution) de l'application.
+ * 
+ * @author Sami KRIM
+ * @author Daniel HUANG
+ */
 public class ProblemResolutionMenuLayout extends ScrollPane {
 	/**
 	 * Le stage auquel la page est liée

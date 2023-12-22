@@ -31,7 +31,7 @@ public class FileManager {
 	 * Méthode statique pour charger une communauté urbaine d'un fichier
 	 * 
 	 * @param filePath Le chemin absolu du fichier représentant la communauté
-	 * @param result
+	 * @param result Contient une information sur l'opération
 	 * 
 	 * @return La communauté urbaine chargée du fichier
 	 */
