@@ -1,4 +1,4 @@
-package up.mi.skdh.frontend;
+package up.mi.skdh.frontend.commandLineVer;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -23,7 +23,6 @@ import up.mi.skdh.backend.UrbanCommunity;
  * @author Sami KRIM
  * @author Daniel HUANG
  */
-
 public class MenuControl {
 	// **************************************************
     // Attributs
@@ -85,6 +84,7 @@ public class MenuControl {
 				break;
 			case 3:
 				this.saveCommunity();
+				this.pausePrints();
 				break;
 			case 4:
 				System.out.println("FIN!");
@@ -98,44 +98,6 @@ public class MenuControl {
 				break;
 			}
 		} while(choice != 4);
-		
-	}
-	
-	/**
-     * Affiche le premier menu pour la résolution manuelle afin d'ajouter des liaisons entre les villes.
-     */
-	private void displayManualMenu1() {
-		int choice = 0;
-		do {
-			System.out.println("<<<<<<<<<<<<<< Menu >>>>>>>>>>>>>>");
-			System.out.println("1: Ajouter une route");
-			System.out.println("2: Fin");
-			try {
-				choice = choiceReader.nextInt();
-				
-				switch(choice) {
-				case 1:
-					this.community.displayUrbanCommunity();
-					this.addRoad(); //Ajouter une route
-					this.pausePrints();
-					this.community.displayCitiesAndNeighbors();
-					break;
-				case 2:
-					this.community.displayCitiesAndNeighbors(); //Afficher les villes et leurs voisins
-					this.pausePrints();
-					//this.displayManualMenu2(); //Passer au menu de gestion des bornes de recharges
-					this.displayMainMenu();
-					break;
-				default: //Si le choix n'est pas valid
-					System.out.println("Choix invalide. Veuillez choisir une autre fois");
-					break;
-				}
-				this.pausePrints(); //Pauser l'affichage
-			} catch (InputMismatchException e) {
-				System.out.println("Merci d'introduire un <<nombre>> correspondant à l'un des choix précédent");
-				choiceReader.next();
-			}
-		} while(choice != 2);
 		
 	}
 	
@@ -181,20 +143,6 @@ public class MenuControl {
 	}
 	
 	/**
-     * Méthode pour ajouter une route entre deux villes.
-     */
-	private void addRoad(){
-		System.out.println("Donnez le nom des villes que vous souhaitez relier avec une route.");
-		System.out.println("Nom de la première ville : ");
-		String cityAName = choiceReader.next(); //Lire le nom de la première ville
-		System.out.println("Nom de la deuxième ville : ");
-		String cityBName = choiceReader.next(); //Lire le nom de la deuxième ville
-		if(community.addRoad(cityAName, cityBName)){ //Ajouter une route entre les deux villes.
-			System.out.println("Route ajoutée avec succés entre " + cityAName + " et " + cityBName + ".");
-		}
-	}
-	
-	/**
      * Méthode pour ajouter une borne de recharge à une ville.
      */
 	private void addChargingCity() {
@@ -234,44 +182,12 @@ public class MenuControl {
 	}
 	
 	/**
-     * Méthode pour charger la communauté urbaine avec des villes et leurs noms.
-     */
-	private void loadUrbanCommunity() {
-		int numberOfCities;
-        while (true) {
-            try {
-                System.out.println("Merci d'introduire le nombre de villes : ");
-                numberOfCities = this.choiceReader.nextInt(); //Lire le nombre de villes de la communauté urbaine
-                if (numberOfCities >= 0) {
-                	break;
-                } else {
-                	throw new InputMismatchException();
-                }
-            } catch (InputMismatchException e) { //Si la valeur introduite n'est pas un nombre entier
-                System.out.println("Erreur : Entrez un <<nombre>> <<entier>> <<positif>> pour le nombre de villes.");
-            } finally {
-            	this.choiceReader.nextLine(); //Consommer l'entrée précédente
-            }
-        }
-
-        for (int i = 0; i < numberOfCities; i++) {
-            System.out.print("Entrez le nom de la ville " + (i + 1) + " : ");
-            String cityName = this.choiceReader.nextLine(); //Lire le nom de la ville
-            City city = new City(cityName); //Créer une nouvelle ville
-            this.community.addCity(city); //Ajouter la ville à la liste des villes de la communauté urbaine 
-        }
-
-        System.out.println("Communité chargée avec succès!");
-        this.community.displayUrbanCommunity();
-        this.pausePrints();
-    }
-	
-	/**
 	 * Méthode pour charger la communauté urbaine avec des villes et leurs noms.
 	 * 
 	 * @param filePath le chemin absolu auf fichier de la communauté
+	 * @return True si la ville a été chargée avec succès, False sinon.
 	 */
-	private void loadUrbanCommunity(String filePath) {
+	private boolean loadUrbanCommunity(String filePath) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {
         	String line;
         	while((line = fileReader.readLine())!=null) {
@@ -283,6 +199,7 @@ public class MenuControl {
         	try {
         		this.community.verifyAccessibilityConstraint();
         		System.out.println("La contrainte d'accessibilité est respectée.");
+        		return true;
         	}catch(AccessibilityConstraintNotVerifiedException e) {
         		System.out.println("La contrainte d'accessibilité n'est pas respectée : "+ e.getMessage());
         		System.out.println("La solution naive sera utilisée");
@@ -290,10 +207,12 @@ public class MenuControl {
         		this.pausePrints();
         		this.community.displayCitiesAndNeighbors();
         		this.community.displayCitiesWithChargingPoint();
+        		return true;
         	}
 		}catch(IOException e) {
             System.out.println("Une erreur s'est produit lors de la lecture du fichier : " + e.getMessage());
         }
+		return false;
     }
 	
 	/**
@@ -314,10 +233,10 @@ public class MenuControl {
 		}else if(lowerCaseLine.startsWith("route(")) {
 			String[] cities = line.substring(6, line.length() - 1).replace(" ", "").split(",");//Extraire les noms des villes
 			if(cities.length == 2) {
-				this.community.addRoad(cities[0], cities[1]);
+				this.community.addRoadLC(cities[0], cities[1]);
 			}
 		}else if(lowerCaseLine.startsWith("recharge(")) {
-			String cityName = line.substring(9, line.length() - 2);
+			String cityName = line.substring(9, line.length() - 1);
 			try {
 				City city = this.community.findCity(cityName);
 				city.addChargingPoint();
@@ -423,10 +342,14 @@ public class MenuControl {
 	 * @return le chemin absolu au fichier
 	 */
 	private String readFilePath() {
-		Scanner filePathReader = new Scanner(System.in);
 		System.out.println("Préciser l'emplacement du fichier : ");
-		String filePath = filePathReader.nextLine().trim();
-		filePathReader.close();
+		String filePath = "";
+		do {
+			 filePath = this.choiceReader.nextLine().trim();
+		} while(filePath == "");
+		if (!filePath.toLowerCase().endsWith(".txt")) {
+        	filePath += ".txt";
+        }
 		return filePath;
 	}
 	
@@ -483,16 +406,9 @@ public class MenuControl {
 	 */
 	public void startApp(String filePath) {
 		System.out.println("Bienvenue dans le Gestionnaire de bornes de recharge !");
-		this.loadUrbanCommunity(filePath);
-		this.displayMainMenu();
-	}
-	
-	/**
-     * Lance l'application en chargeant la communauté urbaine et affichant le premier menu.
-     */
-	public void startApp() {
-		System.out.println("Bienvenue dans le Gestionnaire de bornes de recharge !");
-		this.loadUrbanCommunity();
-		this.displayManualMenu1();
+		boolean result = this.loadUrbanCommunity(filePath);
+		if(result) {
+			this.displayMainMenu();
+		}
 	}
 }

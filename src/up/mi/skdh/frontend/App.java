@@ -1,6 +1,9 @@
-	package up.mi.skdh.frontend;
-	
-	/**
+package up.mi.skdh.frontend;
+
+import javafx.application.Application;
+import up.mi.skdh.frontend.commandLineVer.MenuControl;
+
+/**
 	 * Classe principale de l'application, responsable du démarrage de l'interface utilisateur.
 	 * Cette classe contient la méthode principale (main) qui lance l'application pour manipuler la communauté urbaine.
 	 * 
@@ -12,9 +15,8 @@
 	public class App {
 		/**
 	     * Entrée de l'application.
-	     * Crée une instance de MenuControl et lance l'application en appelant sa méthode startApp().
-	     * Si aucun chemin d'un fichier est précisé lors de l'execution, la communauté sera introduite manuellement
-	     * sinon, par l'intermidiaire d'un fichier texte.
+	     * Crée une instance de MenuControl et lance l'application en appelant sa méthode startApp() Si un chemin absolu vers un fichier texte a été spécifié
+	     * Si aucun chemin d'un fichier est précisé lors de l'execution, l'interface graphique va être affiché.
 	     * 
 	     * @param args Les arguments en ligne de commande.
 	     */
@@ -23,8 +25,14 @@
 			if(args.length > 0) {
 				app.startApp(args[0]);
 			} else {
-				app.startApp();
+				launchMainApp(); 
 			}
 		}
-	
+		
+		/**
+		 * Méthode pour démarrer l'interface graphique de l'application
+		 */
+		private static void launchMainApp() {
+	        Application.launch(MainApp.class);
+	    }
 	}

@@ -57,6 +57,39 @@ public class UrbanCommunity {
 	}
 	
 	/**
+	 * Vérifie si la ville précisée existe dans la communauté
+	 * 
+	 * @param cityName Le nom de la ville à rechercher
+	 * @return True si le ville existe, False sinon
+	 */
+	public boolean hasCity(String cityName){
+		for(City city : this.cities) {
+			if(city.getName().equals(cityName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Vérifie si la route précisée existe entre deux villes dans la communauté
+	 * 
+	 * @param cityAName Le nom de la première ville
+	 * @param cityBName Le nom de la deuxième ville
+	 * @return True si le route existe, False sinon
+	 */
+	public boolean hasRoad(String cityAName, String cityBName) {
+	    try {
+	        City cityA = this.findCity(cityAName);
+	        City cityB = this.findCity(cityBName);
+
+	        return cityA.getNeighbors().contains(cityB);
+	    } catch (CityNotFoundException e) {}
+	    return false;
+	}
+
+	
+	/**
      * Retourne le nombre de villes avec une zone de recharge dans la communauté urbaine.
      * 
      * @return Le nombre de villes avec une zone de recharge
@@ -92,9 +125,22 @@ public class UrbanCommunity {
      * 
      * @param cityAName Le nom de la première ville
      * @param cityBName Le nom de la deuxième ville
+     */
+	public void addRoad(String cityAName, String cityBName) throws CityNotFoundException{
+		City cityA = this.findCity(cityAName); //Rechercher la première ville
+		City cityB = this.findCity(cityBName); //Rechercher la deuxième ville
+		cityA.addNeighbor(cityB); //Ajouter la première ville à la liste des voisins de la deuxième ville
+		cityB.addNeighbor(cityA); //Ajouter la deuxième ville à la liste des voisins de la première ville
+	}
+	
+	/**
+     * Ajoute une route entre deux villes, les reliant.
+     * 
+     * @param cityAName Le nom de la première ville
+     * @param cityBName Le nom de la deuxième ville
      * @return L'état de l'ajout de la route
      */
-	public boolean addRoad(String cityAName, String cityBName) {
+	public boolean addRoadLC(String cityAName, String cityBName) {
 		try {
 			City cityA = this.findCity(cityAName); //Rechercher la première ville
 			City cityB = this.findCity(cityBName); //Rechercher la deuxième ville

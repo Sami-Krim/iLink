@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"up.mi.skdh.backend"},{"l":"up.mi.skdh.exceptions"},{"l":"up.mi.skdh.frontend"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"up.mi.skdh.backend"},{"l":"up.mi.skdh.exceptions"},{"l":"up.mi.skdh.frontend"},{"l":"up.mi.skdh.frontend.commandLineVer"},{"l":"up.mi.skdh.frontend.layouts"},{"l":"up.mi.skdh.frontend.managers"}];updateSearchResults();
